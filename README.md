@@ -1,11 +1,44 @@
-# Nuxt Minimal Starter
+# 🎬 Parotia - Duygu Bazlı Film Öneri Sistemi
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Ruh halinize göre mükemmel film ve dizi önerilerini keşfedin.
 
-## Setup
+## 📋 Proje Hakkında
 
-Make sure to install dependencies:
+Parotia, kullanıcıların duygusal durumlarına göre kişiselleştirilmiş film ve dizi önerileri sunan modern bir web uygulamasıdır. Yapay zeka destekli öneri sistemi ile kullanıcılara en uygun içerikleri bulma deneyimi sağlar.
 
+## ✨ Özellikler
+
+- 🎭 Duygu bazlı akıllı film ve dizi önerileri
+- 🎨 Modern ve responsive tasarım
+- ⚡ Hızlı ve kullanıcı dostu arayüz
+- 📱 Mobil uyumlu tasarım
+- 🔍 Detaylı film ve dizi bilgileri
+- 🎬 Geniş içerik veritabanı
+
+## 🛠️ Teknolojiler
+
+- **Framework**: [Nuxt 4](https://nuxt.com/) 
+- **Frontend**: [Vue 3](https://vuejs.org/) (Composition API)
+- **Styling**: [TailwindCSS 4](https://tailwindcss.com/)
+- **Dil**: TypeScript
+- **Font**: Inter & Space Grotesk
+
+## 🚀 Kurulum
+
+### Gereksinimler
+
+- Node.js 18+ 
+- npm, yarn, pnpm veya bun
+
+### Kurulum Adımları
+
+1. Projeyi klonlayın:
+```bash
+git clone https://github.com/kullanici-adi/parotia-ui.git
+cd parotia-ui
+```
+
+2. Bağımlılıkları kurun:
 ```bash
 # npm
 npm install
@@ -20,15 +53,12 @@ yarn install
 bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
+3. Geliştirme sunucusunu başlatın:
 ```bash
 # npm
 npm run dev
 
-# pnpm
+# pnpm  
 pnpm dev
 
 # yarn
@@ -38,9 +68,11 @@ yarn dev
 bun run dev
 ```
 
-## Production
+Uygulama `http://localhost:3000` adresinde çalışacaktır.
 
-Build the application for production:
+## 🏗️ Build ve Deploy
+
+### Production Build
 
 ```bash
 # npm
@@ -56,7 +88,9 @@ yarn build
 bun run build
 ```
 
-Locally preview production build:
+### Preview
+
+Production build'i yerel olarak önizlemek için:
 
 ```bash
 # npm
@@ -72,4 +106,52 @@ yarn preview
 bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## 📁 Proje Yapısı
+
+```
+parotia-ui/
+├── assets/
+│   └── css/           # Global stiller
+├── composables/       # Vue composable'lar
+├── pages/
+│   ├── movie/         # Film sayfaları
+│   └── tv/           # Dizi sayfaları
+├── public/           # Statik dosyalar
+├── app.vue          # Ana uygulama komponenti
+└── nuxt.config.ts   # Nuxt konfigürasyonu
+```
+
+## 🔧 Konfigürasyon
+
+Proje, `nuxt.config.ts` dosyasında yapılandırılmıştır. Ana konfigürasyon ayarları:
+
+- **API Base URL**: `http://localhost:8000` (varsayılan)
+- **SSR**: Aktif
+- **DevTools**: Geliştirme modunda aktif
+- **TailwindCSS**: Vite plugin ile entegre
+
+Çevre değişkenleri:
+```bash
+API_BASE_URL=http://localhost:8000  # Backend API URL'si
+```
+
+## 🎯 Kullanım
+
+1. Ana sayfada ruh halinizi seçin
+2. Sistem size uygun film/dizi önerilerini gösterecek
+3. İlginizi çeken içeriğe tıklayarak detaylarını görün
+4. Beğendiğiniz içerikleri favorilerinize ekleyin
+
+## 🤝 Katkıda Bulunma
+
+1. Projeyi fork edin
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Değişikliklerinizi commit edin (`git commit -m 'feat: Add amazing feature'`)
+4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
+5. Pull Request oluşturun
+
+## 📞 İletişim
+
+Proje hakkında sorularınız için issue açabilir veya iletişime geçebilirsiniz.
+
+---
