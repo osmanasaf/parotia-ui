@@ -1,0 +1,51 @@
+Parotia Frontend Geliştirme Dökümanı (Kısa ve Net)
+1. Kullanıcı Akışı ve Yapılacaklar
+1.1. Kullanıcıdan duygu alınır
+Kullanıcı ana sayfada bir duygu (örn: "mutlu", "üzgün", "heyecanlı") girer.
+1.2. Öneri alınır
+Kullanıcı isterse:
+Hibrit öneri (duygu + geçmiş)
+Sadece duyguya dayalı öneri alabilir.
+1.3. Öneri listesi gösterilir
+Kullanıcıya önerilen filmler listelenir.
+1.4. Film seçilirse detay sayfası açılır
+Kullanıcı bir filme tıklar, detay sayfası açılır.
+1.5. Film nerede izlenir bilgisi gösterilir
+Detayda, filmin hangi platformlarda izlenebileceği gösterilir.
+2. Kullanılacak Endpointler ve Örnekleri
+2.1. Hibrit Öneri Al (POST)
+Endpoint:
+POST /recommendations/hybrid
+Request:
+Apply
+Response:
+Apply
+2.2. Duygu Bazlı Öneri Al (POST)
+Endpoint:
+POST /recommendations/current-emotion
+Request:
+Apply
+Response:
+Yukarıdakiyle aynı formatta döner, sadece "recommendation_type": "emotion_based" olur.
+2.3. Film Detayını Getir (GET)
+Endpoint:
+GET /movies/{tmdb_id}
+Response:
+Apply
+2.4. Film Nerede İzlenir? (GET)
+Endpoint:
+GET /movies/{tmdb_id}/watch-providers
+Response:
+Apply
+3. Özet Akış
+Kullanıcıdan duygu alınır.
+/recommendations/hybrid veya /recommendations/current-emotion endpointine POST atılır.
+Dönen film listesi gösterilir.
+Kullanıcı bir filme tıklar, /movies/{tmdb_id} ile detay alınır.
+Aynı anda /movies/{tmdb_id}/watch-providers ile platform bilgisi alınır ve gösterilir.
+Not:
+Sadece yukarıdaki endpointler ve akış kullanılacak.
+Request ve response örnekleri birebir backend ile uyumludur.
+Ekstra kullanıcı işlemleri (login/register) gerekiyorsa /auth/login ve /auth/register endpointleri kullanılabilir.
+Kısa ve net:
+Duygu al, öneri getir, film detayını ve nerede izlenir bilgisini göster!

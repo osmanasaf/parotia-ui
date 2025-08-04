@@ -1,0 +1,140 @@
+# Parotia – FilmDizi Bilgi ve Duygu Tabanlı Öneri Sistemi
+
+## 📌 Proje Özeti
+
+Parotia, kullanıcıların duygusal durumlarına veya izleme geçmişlerine dayanarak filmdizi önerileri yapan, kullanıcıların içerik hakkında yorum yapıp puanlayabildikleri ve içeriklerin ülke bazlı platform erişimlerini sunan akıllı bir öneri platformudur.
+
+---
+
+## 🚀 Proje Amaçları
+
+ Kullanıcıların izlemek istediği içeriği, duygusal ihtiyaçlarına göre en doğru şekilde bulmalarını sağlamak.
+ Kullanıcıların film ve dizi içeriklerine yorum ve puan vererek kişiselleştirilmiş deneyimlerini paylaşmaları.
+ Kullanıcılara ülke bazında hangi platformda hangi içeriğin erişilebilir olduğunu sunmak.
+ Platformu ileriye dönük mobil uygulamalarla entegre ederek daha geniş bir kitleye ulaşmak.
+
+---
+
+## 🛠️ Teknoloji Yığını
+
+### Backend
+
+ Dil ve Framework Python (FastAPI)
+ Veritabanı PostgreSQL (geliştirme ortamında SQLite)
+ ORM SQLAlchemy
+ Embedding sentence-transformers (SBERT)
+ Benzerlik Arama scikit-learn (cosine similarity), FAISS
+ API Dokümantasyonu OpenAPISwagger
+
+### Frontend
+
+ Framework Vue.js 3 (Composition API)
+ State Yönetimi Pinia
+ HTTP İstekleri Axios
+ Styling Tailwind CSS veya Vuetify
+ Routing Vue Router
+
+### Mobil (İleriye Dönük)
+
+ Capacitor (Hibrit) veya Flutter (Native-like)
+
+---
+
+## 📂 Proje Yapısı
+
+```
+parotia
+├── backend
+│   ├── app
+│   │   ├── core      # Embedding ve öneri mantığı
+│   │   ├── models    # SQLAlchemy modelleri
+│   │   ├── routers   # API endpointleri
+│   │   └── main.py
+│   └── tests         # Backend testleri
+│
+├── frontend
+│   ├── public
+│   └── src
+│       ├── assets
+│       ├── components
+│       ├── router
+│       ├── store     # Pinia state yönetimi
+│       └── views
+│
+├── data              # Başlangıç film verileri
+├── docs              # Proje dokümantasyonu
+└── mobile            # İleriye dönük mobil uygulama
+```
+
+---
+
+## 🔍 Fonksiyonel Özellikler
+
+### Kullanıcı Yönetimi
+
+ Kullanıcı kaydı ve girişi (OAuth opsiyonel)
+ Kullanıcı profili (izleme geçmişi, puanlanan içerikler)
+
+### İçerik Bilgi Yönetimi
+
+ Film ve dizi içerikleri (isim, tür, yıl, oyuncular, açıklamalar, görseller)
+ Ülke bazında platform erişim bilgisi (Netflix, Disney+, Amazon vb.)
+
+### Kullanıcı Etkileşimi
+
+ İçeriklere yorum ve puan verme
+ İzlenenizlenecek içerik listeleri oluşturma
+
+### Duygu ve Hibrit Öneri Sistemi
+
+ Kullanıcının duygu durumuna göre içerik önerme
+ İzleme geçmişi ve duygu durumunu harmanlayan hibrit öneri sistemi
+ Kullanıcı geri bildirimiyle öneri doğruluğunu geliştirme
+
+---
+
+## 📡 API Endpointleri (Backend)
+
+ `films` (GET, POST) Filmdizi bilgilerini listeleme ve ekleme
+ `films{id}` (GET, PUT, DELETE) Tek filmdizi detayı
+ `recommend` (POST) Kullanıcı girdisine göre öneri
+ `users` (GET, POST) Kullanıcı yönetimi
+ `comments` (POST, GET) Kullanıcı yorumları ve puanları
+ `availability` (GET) Ülke ve platform bazında içerik arama
+
+---
+
+## 🌱 Geliştirme Aşamaları
+
+###  (MVP)
+
+ Backend veri yapısını oluşturmak (film verileri)
+ Embedding ve öneri API'sini geliştirmek
+ Vue.js ile basit öneri ve içerik gösterimi yapmak
+ Kullanıcı yorum ve puan sistemini eklemek
+ Ülke ve platform bazlı arama özelliği geliştirmek
+ Kullanıcı kayıt ve giriş sistemini entegre etmek
+ Kullanıcı geçmişiyle hibrit önerileri geliştirmek
+
+Aşama 2
+
+ Mobil uygulama geliştirmek (Capacitor veya Flutter)
+ Geri bildirim sistemi ile önerileri daha doğru hale getirmek
+
+---
+
+## 🚧 Projeyi İleriye Taşıyacak Özellikler
+
+ Yapay zeka destekli chatbot ile içerik önerileri
+ İzleme grupları ve arkadaşlarla paylaşma özelliği
+ Kişiselleştirilmiş haftalık film önerileri mail bülteni
+ Platformlar arası veri senkronizasyonu (mobil ve web)
+ Gelişmiş istatistiklerle kullanıcı izleme analizi
+
+---
+
+## 📝 Proje Dokümantasyonu ve İletişim
+
+ Proje dokümantasyonu GitHub Wiki veya özel dokümantasyon araçlarıyla (örn. Notion, Confluence) tutulur.
+ GitHub Issues ve PR’lar ile iş takibi yapılır.
+ Discord veya Slack üzerinden geliştirme iletişimi sağlanır.
