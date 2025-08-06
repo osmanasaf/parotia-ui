@@ -7,7 +7,7 @@
       <img 
         :src="`https://image.tmdb.org/t/p/w1280${tvDetail.backdrop_path}`"
         :alt="tvDetail.name"
-        class="w-full h-full object-cover opacity-20"
+        class="w-full h-full object-cover opacity-30"
       >
       <div class="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-800/80 to-black/80"></div>
     </div>
@@ -129,27 +129,172 @@
       <div class="mb-12">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl md:text-3xl font-bold text-white">
-            🔍 Where to Watch
+            📺 Nerede İzlenir?
           </h2>
           <div class="flex items-center">
-            <label for="country-select" class="text-white/80 mr-3">Country:</label>
+            <label for="country-select" class="text-white/80 mr-3">Ülke:</label>
             <select 
               id="country-select"
               v-model="selectedCountry" 
               @change="loadWatchProviders"
               class="bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="TR">🇹🇷 Turkey</option>
-              <option value="US">🇺🇸 United States</option>
-              <option value="GB">🇬🇧 United Kingdom</option>
-              <option value="DE">🇩🇪 Germany</option>
+              <option value="TR">🇹🇷 Türkiye</option>
+              <option value="US">🇺🇸 Amerika</option>
+              <option value="GB">🇬🇧 İngiltere</option>
+              <option value="DE">🇩🇪 Almanya</option>
+              <option value="FR">🇫🇷 Fransa</option>
+              <option value="IT">🇮🇹 İtalya</option>
+              <option value="ES">🇪🇸 İspanya</option>
+              <option value="NL">🇳🇱 Hollanda</option>
+              <option value="BE">🇧🇪 Belçika</option>
+              <option value="AT">🇦🇹 Avusturya</option>
+              <option value="CH">🇨🇭 İsviçre</option>
+              <option value="SE">🇸🇪 İsveç</option>
+              <option value="NO">🇳🇴 Norveç</option>
+              <option value="DK">🇩🇰 Danimarka</option>
+              <option value="FI">🇫🇮 Finlandiya</option>
+              <option value="PL">🇵🇱 Polonya</option>
+              <option value="CZ">🇨🇿 Çek Cumhuriyeti</option>
+              <option value="HU">🇭🇺 Macaristan</option>
+              <option value="RO">🇷🇴 Romanya</option>
+              <option value="BG">🇧🇬 Bulgaristan</option>
+              <option value="HR">🇭🇷 Hırvatistan</option>
+              <option value="SI">🇸🇮 Slovenya</option>
+              <option value="SK">🇸🇰 Slovakya</option>
+              <option value="LT">🇱🇹 Litvanya</option>
+              <option value="LV">🇱🇻 Letonya</option>
+              <option value="EE">🇪🇪 Estonya</option>
+              <option value="CA">🇨🇦 Kanada</option>
+              <option value="AU">🇦🇺 Avustralya</option>
+              <option value="NZ">🇳🇿 Yeni Zelanda</option>
+              <option value="BR">🇧🇷 Brezilya</option>
+              <option value="AR">🇦🇷 Arjantin</option>
+              <option value="MX">🇲🇽 Meksika</option>
+              <option value="CL">🇨🇱 Şili</option>
+              <option value="CO">🇨🇴 Kolombiya</option>
+              <option value="PE">🇵🇪 Peru</option>
+              <option value="VE">🇻🇪 Venezuela</option>
+              <option value="UY">🇺🇾 Uruguay</option>
+              <option value="PY">🇵🇾 Paraguay</option>
+              <option value="EC">🇪🇨 Ekvador</option>
+              <option value="BO">🇧🇴 Bolivya</option>
+              <option value="GY">🇬🇾 Guyana</option>
+              <option value="SR">🇸🇷 Surinam</option>
+              <option value="GF">🇬🇫 Fransız Guyanası</option>
+              <option value="FK">🇫🇰 Falkland Adaları</option>
+              <option value="JP">🇯🇵 Japonya</option>
+              <option value="KR">🇰🇷 Güney Kore</option>
+              <option value="CN">🇨🇳 Çin</option>
+              <option value="IN">🇮🇳 Hindistan</option>
+              <option value="TH">🇹🇭 Tayland</option>
+              <option value="VN">🇻🇳 Vietnam</option>
+              <option value="MY">🇲🇾 Malezya</option>
+              <option value="SG">🇸🇬 Singapur</option>
+              <option value="ID">🇮🇩 Endonezya</option>
+              <option value="PH">🇵🇭 Filipinler</option>
+              <option value="TW">🇹🇼 Tayvan</option>
+              <option value="HK">🇭🇰 Hong Kong</option>
+              <option value="MO">🇲🇴 Makao</option>
+              <option value="RU">🇷🇺 Rusya</option>
+              <option value="UA">🇺🇦 Ukrayna</option>
+              <option value="BY">🇧🇾 Belarus</option>
+              <option value="MD">🇲🇩 Moldova</option>
+              <option value="GE">🇬🇪 Gürcistan</option>
+              <option value="AM">🇦🇲 Ermenistan</option>
+              <option value="AZ">🇦🇿 Azerbaycan</option>
+              <option value="KZ">🇰🇿 Kazakistan</option>
+              <option value="UZ">🇺🇿 Özbekistan</option>
+              <option value="KG">🇰🇬 Kırgızistan</option>
+              <option value="TJ">🇹🇯 Tacikistan</option>
+              <option value="TM">🇹🇲 Türkmenistan</option>
+              <option value="AF">🇦🇫 Afganistan</option>
+              <option value="PK">🇵🇰 Pakistan</option>
+              <option value="BD">🇧🇩 Bangladeş</option>
+              <option value="LK">🇱🇰 Sri Lanka</option>
+              <option value="NP">🇳🇵 Nepal</option>
+              <option value="BT">🇧🇹 Bhutan</option>
+              <option value="MV">🇲🇻 Maldivler</option>
+              <option value="MM">🇲🇲 Myanmar</option>
+              <option value="LA">🇱🇦 Laos</option>
+              <option value="KH">🇰🇭 Kamboçya</option>
+              <option value="MN">🇲🇳 Moğolistan</option>
+              <option value="KP">🇰🇵 Kuzey Kore</option>
+              <option value="IL">🇮🇱 İsrail</option>
+              <option value="LB">🇱🇧 Lübnan</option>
+              <option value="SY">🇸🇾 Suriye</option>
+              <option value="JO">🇯🇴 Ürdün</option>
+              <option value="IQ">🇮🇶 Irak</option>
+              <option value="IR">🇮🇷 İran</option>
+              <option value="KW">🇰🇼 Kuveyt</option>
+              <option value="SA">🇸🇦 Suudi Arabistan</option>
+              <option value="AE">🇦🇪 Birleşik Arap Emirlikleri</option>
+              <option value="QA">🇶🇦 Katar</option>
+              <option value="BH">🇧🇭 Bahreyn</option>
+              <option value="OM">🇴🇲 Umman</option>
+              <option value="YE">🇾🇪 Yemen</option>
+              <option value="EG">🇪🇬 Mısır</option>
+              <option value="LY">🇱🇾 Libya</option>
+              <option value="TN">🇹🇳 Tunus</option>
+              <option value="DZ">🇩🇿 Cezayir</option>
+              <option value="MA">🇲🇦 Fas</option>
+              <option value="SD">🇸🇩 Sudan</option>
+              <option value="SS">🇸🇸 Güney Sudan</option>
+              <option value="ET">🇪🇹 Etiyopya</option>
+              <option value="ER">🇪🇷 Eritre</option>
+              <option value="DJ">🇩🇯 Cibuti</option>
+              <option value="SO">🇸🇴 Somali</option>
+              <option value="KE">🇰🇪 Kenya</option>
+              <option value="UG">🇺🇬 Uganda</option>
+              <option value="TZ">🇹🇿 Tanzanya</option>
+              <option value="RW">🇷🇼 Ruanda</option>
+              <option value="BI">🇧🇮 Burundi</option>
+              <option value="MZ">🇲🇿 Mozambik</option>
+              <option value="ZW">🇿🇼 Zimbabve</option>
+              <option value="ZM">🇿🇲 Zambiya</option>
+              <option value="MW">🇲🇼 Malavi</option>
+              <option value="BW">🇧🇼 Botsvana</option>
+              <option value="NA">🇳🇦 Namibya</option>
+              <option value="ZA">🇿🇦 Güney Afrika</option>
+              <option value="LS">🇱🇸 Lesotho</option>
+              <option value="SZ">🇸🇿 Eswatini</option>
+              <option value="MG">🇲🇬 Madagaskar</option>
+              <option value="MU">🇲🇺 Mauritius</option>
+              <option value="SC">🇸🇨 Seyşeller</option>
+              <option value="KM">🇰🇲 Komorlar</option>
+              <option value="TD">🇹🇩 Çad</option>
+              <option value="CF">🇨🇫 Orta Afrika Cumhuriyeti</option>
+              <option value="CM">🇨🇲 Kamerun</option>
+              <option value="GQ">🇬🇶 Ekvator Ginesi</option>
+              <option value="GA">🇬🇦 Gabon</option>
+              <option value="CG">🇨🇬 Kongo Cumhuriyeti</option>
+              <option value="CD">🇨🇩 Demokratik Kongo Cumhuriyeti</option>
+              <option value="AO">🇦🇴 Angola</option>
+              <option value="ST">🇸🇹 São Tomé ve Príncipe</option>
+              <option value="GW">🇬🇼 Gine-Bissau</option>
+              <option value="GN">🇬🇳 Gine</option>
+              <option value="SL">🇸🇱 Sierra Leone</option>
+              <option value="LR">🇱🇷 Liberya</option>
+              <option value="CI">🇨🇮 Fildişi Sahili</option>
+              <option value="GH">🇬🇭 Gana</option>
+              <option value="TG">🇹🇬 Togo</option>
+              <option value="BJ">🇧🇯 Benin</option>
+              <option value="NG">🇳🇬 Nijerya</option>
+              <option value="NE">🇳🇪 Nijer</option>
+              <option value="BF">🇧🇫 Burkina Faso</option>
+              <option value="ML">🇲🇱 Mali</option>
+              <option value="SN">🇸🇳 Senegal</option>
+              <option value="GM">🇬🇲 Gambiya</option>
+              <option value="CV">🇨🇻 Yeşil Burun</option>
+              <option value="MR">🇲🇷 Moritanya</option>
+              <option value="EH">🇪🇭 Batı Sahra</option>
             </select>
           </div>
         </div>
 
         <div v-if="isLoadingProviders" class="text-center py-8">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto mb-4"></div>
-          <p class="text-white/70">Loading streaming platforms...</p>
+          <p class="text-white/70">Platform bilgileri yükleniyor...</p>
         </div>
 
         <div v-else-if="watchProviders.length > 0" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -158,15 +303,27 @@
             :key="provider.provider_id"
             class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 text-center hover:bg-white/20 transition-colors"
           >
-            <div class="text-3xl mb-2">📺</div>
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3 overflow-hidden">
+              <NuxtImg 
+                v-if="provider.logo_path"
+                :src="`https://image.tmdb.org/t/p/original${provider.logo_path}`"
+                :alt="provider.provider_name"
+                class="w-full h-full object-cover"
+                loading="lazy"
+                @error="$event.target.style.display = 'none'"
+              />
+              <div v-else class="w-full h-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
+                <span class="text-white font-bold text-lg">{{ provider.provider_name[0] }}</span>
+              </div>
+            </div>
             <h3 class="text-white font-semibold text-sm">{{ provider.provider_name }}</h3>
           </div>
         </div>
 
         <div v-else class="text-center py-8">
           <div class="text-6xl mb-4">😔</div>
-          <h3 class="text-xl font-semibold text-white mb-2">No Streaming Info Available</h3>
-          <p class="text-white/70">Streaming information is not available for this content yet.</p>
+          <h3 class="text-xl font-semibold text-white mb-2">Platform Bilgisi Bulunamadı</h3>
+          <p class="text-white/70">Bu içerik için henüz platform bilgisi mevcut değil.</p>
         </div>
       </div>
 
@@ -317,29 +474,56 @@ const loadWatchProviders = async () => {
     const { getWatchProviders } = useApi()
     const response = await getWatchProviders(tvId, selectedCountry.value)
     
+    console.log('Watch providers response:', response)
+    
     if (response.success && response.data?.results) {
       const countryData = response.data.results[selectedCountry.value]
-      if (countryData?.flatrate) {
-        watchProviders.value = countryData.flatrate.map(provider => ({
-          provider_id: provider.provider_id,
-          provider_name: provider.provider_name,
-          logo_path: provider.logo_path,
-          display_priority: 1
-        }))
+      console.log('Country data for', selectedCountry.value, ':', countryData)
+      
+      if (countryData) {
+        // Tüm provider türlerini birleştir (flatrate, buy, rent)
+        const allProviders = []
+        
+        if (countryData.flatrate && Array.isArray(countryData.flatrate)) {
+          allProviders.push(...countryData.flatrate.map(provider => ({
+            ...provider,
+            type: 'flatrate'
+          })))
+        }
+        
+        if (countryData.buy && Array.isArray(countryData.buy)) {
+          allProviders.push(...countryData.buy.map(provider => ({
+            ...provider,
+            type: 'buy'
+          })))
+        }
+        
+        if (countryData.rent && Array.isArray(countryData.rent)) {
+          allProviders.push(...countryData.rent.map(provider => ({
+            ...provider,
+            type: 'rent'
+          })))
+        }
+        
+        // Duplicate provider'ları kaldır (aynı provider_id'ye sahip olanları)
+        const uniqueProviders = allProviders.filter((provider, index, self) => 
+          index === self.findIndex(p => p.provider_id === provider.provider_id)
+        )
+        
+        console.log('All providers:', allProviders)
+        console.log('Unique providers:', uniqueProviders)
+        
+        watchProviders.value = uniqueProviders
       } else {
         watchProviders.value = []
       }
+    } else {
+      watchProviders.value = []
     }
     
   } catch (error) {
     console.error('Platform information loading error:', error)
-    const { getMockWatchProviders } = useApi()
-    const mockData = getMockWatchProviders(selectedCountry.value)
-    watchProviders.value = mockData.providers.map(provider => ({
-      provider_id: provider.provider_id,
-      provider_name: provider.provider_name,
-      display_priority: provider.display_priority
-    }))
+    watchProviders.value = []
   } finally {
     isLoadingProviders.value = false
   }
