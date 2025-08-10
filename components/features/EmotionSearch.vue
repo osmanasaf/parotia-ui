@@ -14,7 +14,7 @@
       <div class="max-w-4xl mx-auto mb-16">
         <div class="relative">
           <div class="modern-input-container">
-            <div class="mood-indicator"></div>
+            <div class="mood-indicator pause"></div>
             <input 
               v-model="emotionInput"
               type="text" 
@@ -42,11 +42,13 @@
 const emotionInput = ref('')
 const contentStore = useContentStore()
 const { getRecommendations } = useContent()
+const { isLoggedIn } = useAuth()
 
 const isLoading = computed(() => contentStore.isLoading)
 
 const handleGetRecommendations = async () => {
   if (!emotionInput.value.trim()) return
-  await getRecommendations(emotionInput.value)
+  // Sonuç sayfasına yönlendirelim ve query üzerinden inputu geçelim
+  navigateTo({ path: '/results', query: { q: emotionInput.value } })
 }
 </script> 

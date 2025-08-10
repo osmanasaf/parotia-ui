@@ -113,21 +113,22 @@ export const useContent = () => {
 
   const searchContent = async (query, page = 1, contentType = 'all') => {
     try {
-      const { data } = await $fetch('/api/content/search', {
+      const response = await $fetch('/api/content/search', {
         params: { searchQuery: query, page, contentType }
       })
       
-      if (data?.results) {
-        return data.results.map(item => ({
-          id: item.id,
-          title: item.title || item.name,
-          year: item.release_date ? new Date(item.release_date).getFullYear() : 
-                item.first_air_date ? new Date(item.first_air_date).getFullYear() : null,
-          type: item.media_type === 'movie' ? 'Movie' : 'TV Series',
-          poster: item.poster_path,
+      console.log('Search API response:', response)
+      
+      // API'den gelen veri yapısı: response.data.data
+      if (response?.data?.data && Array.isArray(response.data.data)) {
+        return response.data.data.map(item => ({
+          tmdb_id: item.tmdb_id,
+          title: item.title,
+          year: item.year,
+          content_type: item.content_type,
+          poster_path: item.poster_path,
           overview: item.overview,
-          vote_average: item.vote_average,
-          media_type: item.media_type
+          vote_average: item.vote_average
         }))
       }
       return []
@@ -185,6 +186,109 @@ export const useContent = () => {
     }
   }
 
+  const loadGenresWithContent = async (contentType = 'movie') => {
+    try {
+      const response = await $fetch('/api/content/genres-with-content', {
+        params: { content_type: contentType }
+      })
+
+      // Beklenen yapı: { success, data: { sections: [...] } }
+      const sections = response?.data?.data?.sections || response?.data?.sections || []
+      contentStore.setGenreSections(contentType, sections)
+      return sections
+    } catch (error) {
+      console.error('Genres with content yüklenirken hata:', error)
+      contentStore.setGenreSections(contentType, [])
+      return []
+    }
+  }
+
+  const loadMyWatchlist = async () => {
+    try {
+      const { getAuthHeaders } = useTokenManager()
+      const authHeaders = getAuthHeaders()
+      const fetchOpts = Object.keys(authHeaders).length ? { headers: authHeaders } : {}
+      const [moviesRes, tvRes] = await Promise.all([
+        $fetch('/api/movies/my/watchlist', fetchOpts),
+        $fetch('/api/tv/my/watchlist', fetchOpts)
+      ])
+
+      const movieEntries = moviesRes?.data || moviesRes || []
+      const tvEntries = tvRes?.data || tvRes || []
+
+      // Watchlist sadece tmdb_id döndürüyor; detayları TMDB proxy'lerinden çekelim
+      const { getMovieDetail, getTVDetail } = useApi()
+
+      const movies = await Promise.all(
+        (movieEntries || []).map(async (entry) => {
+          try {
+            const detail = await getMovieDetail(entry.tmdb_id)
+            const d = detail?.data || detail
+            return {
+              id: d.id,
+              title: d.title,
+              poster_path: d.poster_path,
+              overview: d.overview,
+              vote_average: d.vote_average,
+              year: (d.release_date || '').slice(0, 4) || '',
+              status: entry.status || 'to_watch',
+              contentType: 'movie',
+              user_rating: entry.user_rating ?? null,
+              user_comment: entry.user_comment ?? ''
+            }
+          } catch {
+            return { id: entry.tmdb_id, title: `#${entry.tmdb_id}`, poster_path: null, overview: '', vote_average: null, year: '', status: entry.status || 'to_watch', contentType: 'movie' }
+          }
+        })
+      )
+
+      const tv = await Promise.all(
+        (tvEntries || []).map(async (entry) => {
+          try {
+            const detail = await getTVDetail(entry.tmdb_id)
+            const d = detail?.data || detail
+            return {
+              id: d.id,
+              name: d.name,
+              title: d.name,
+              poster_path: d.poster_path,
+              overview: d.overview,
+              vote_average: d.vote_average,
+              year: (d.first_air_date || '').slice(0, 4) || '',
+              status: entry.status || 'to_watch',
+              contentType: 'tv',
+              user_rating: entry.user_rating ?? null,
+              user_comment: entry.user_comment ?? ''
+            }
+          } catch {
+            return { id: entry.tmdb_id, title: `#${entry.tmdb_id}`, poster_path: null, overview: '', vote_average: null, year: '', status: entry.status || 'to_watch', contentType: 'tv' }
+          }
+        })
+      )
+
+      const items = [...movies, ...tv]
+      return { movies, tv, items }
+    } catch (error) {
+      console.error('Watchlist yüklenemedi:', error)
+      return { movies: [], tv: [], items: [] }
+    }
+  }
+
+  const rateContent = async ({ tmdbId, contentType = 'movie', rating, comment }) => {
+    try {
+      const endpoint = contentType === 'tv' ? '/tv/rate' : '/movies/rate'
+      const { getAuthHeaders } = useTokenManager()
+      return await $fetch(`/api${endpoint}`, {
+        method: 'POST',
+        body: { tmdb_id: tmdbId, content_type: contentType, rating, comment },
+        headers: getAuthHeaders()
+      })
+    } catch (error) {
+      console.error('Puanlama hatası:', error)
+      throw error
+    }
+  }
+
   const navigateToContent = (content) => {
     if (typeof content === 'object' && content.media_type === 'tv') {
       navigateTo(`/tv/${content.id}`)
@@ -201,6 +305,9 @@ export const useContent = () => {
   return {
     loadPopularMovies,
     loadPopularTVShows,
+    loadGenresWithContent,
+    loadMyWatchlist,
+    rateContent,
     searchContent,
     getRecommendations,
     navigateToContent

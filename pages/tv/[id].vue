@@ -382,7 +382,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -407,11 +407,14 @@ const loadTVDetail = async () => {
   isLoading.value = true
   
   try {
-    const { getTVDetail } = useApi()
-    const response = await getTVDetail(tvId)
+    const { getTVDetailsWithSimilar, getTVDetailsWithSimilarPublic } = useApi()
+    const { isLoggedIn } = useAuth()
+    const response = isLoggedIn.value
+      ? await getTVDetailsWithSimilar(tvId)
+      : await getTVDetailsWithSimilarPublic(tvId)
     
     if (response.success && response.data) {
-      const data = response.data
+      const data = response.data.detail || response.data
       tvDetail.value = {
         id: data.id,
         name: data.name,
@@ -429,14 +432,21 @@ const loadTVDetail = async () => {
         seasons: data.seasons || []
       }
     }
-    
-    similarShows.value = mockSimilarShows
+    if (response.success && response.data?.similar) {
+      similarShows.value = response.data.similar.map(s => ({
+        id: s.tmdb_id,
+        name: s.title || s.name,
+        rating: s.vote_average,
+        poster: s.poster_path,
+      }))
+    } else {
+      similarShows.value = mockSimilarShows
+    }
     
     await loadWatchProviders()
     
   } catch (error) {
     console.error('TV show details loading error:', error)
-    const { getTVDetail } = useApi()
     // Use mock data if API fails
     tvDetail.value = {
       id: tvId,
@@ -553,15 +563,13 @@ const rateTV = async (rating) => {
   }
 }
 
-onMounted(() => {
-  loadTVDetail()
-})
-
-watchEffect(() => {
-  if (route.params.id) {
+watch(
+  () => route.params.id,
+  () => {
     loadTVDetail()
-  }
-})
+  },
+  { immediate: true }
+)
 
 useHead({
   title: computed(() => tvDetail.value ? `${tvDetail.value.name} - Parotia` : 'TV Show Details - Parotia'),

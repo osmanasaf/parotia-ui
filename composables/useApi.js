@@ -1,29 +1,34 @@
 export const useApi = () => {
   const config = useRuntimeConfig()
+  const { getToken, isTokenValid } = useTokenManager()
   
   const API_BASE_URL = config.public.apiBaseUrl || 'http://localhost:8000'
   const apiCall = async (endpoint, options = {}) => {
-    const token = process.client ? localStorage?.getItem('parotia_token') : null
+    const token = getToken?.() || null
     
     try {
       const response = await $fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
+          ...(token && isTokenValid?.(token) ? { 'Authorization': `Bearer ${token}` } : {}),
           ...options.headers,
         },
       })
       return response
     } catch (error) {
       console.error(`API Error for ${endpoint}:`, error)
-      if (error.statusCode === 401 && process.client) {
-        localStorage.removeItem('parotia_token')
+      if (error.statusCode === 401 && typeof window !== 'undefined') {
+        try {
+          localStorage.removeItem('access_token')
+        } catch {
+          /* noop */
+        }
       }
       throw error
     }
   }
-  const getHybridRecommendations = async (emotionText, contentType = 'movie') => {
+  const getHybridRecommendations = async (emotionText, contentType = 'all') => {
     try {
       return await apiCall('/recommendations/hybrid', {
         method: 'POST',
@@ -56,10 +61,15 @@ export const useApi = () => {
     }
   }
 
-  const getEmotionRecommendations = async (emotionText, contentType = 'movie') => {
+  const getEmotionRecommendations = async (emotionText, contentType = 'movie', page = 1) => {
     try {
-      return await apiCall(`/recommendations/current-emotion?emotion_text=${encodeURIComponent(emotionText)}&content_type=${contentType}`, {
-        method: 'POST'
+      return await apiCall('/recommendations/current-emotion', {
+        method: 'POST',
+        body: {
+          emotion: emotionText,
+          content_type: contentType,
+          page
+        }
       })
     } catch (error) {
       console.warn('API çağrısı başarısız, mock data kullanılıyor:', error)
@@ -94,6 +104,22 @@ export const useApi = () => {
         success: true, 
         data: getMockMovieDetail(tmdbId) 
       }
+    }
+  }
+
+  const getMovieDetailsWithSimilar = async (tmdbId) => {
+    try {
+      return await apiCall(`/movies/details-with-similar/${tmdbId}`)
+    } catch (error) {
+      return { success: false }
+    }
+  }
+
+  const getMovieDetailsWithSimilarPublic = async (tmdbId) => {
+    try {
+      return await apiCall(`/movies/details-with-similar-public/${tmdbId}`)
+    } catch (error) {
+      return { success: false }
     }
   }
 
@@ -470,11 +496,31 @@ export const useApi = () => {
     }
   }
 
+  const getTVDetailsWithSimilar = async (tmdbId) => {
+    try {
+      return await apiCall(`/tv/details-with-similar/${tmdbId}`)
+    } catch (error) {
+      return { success: false }
+    }
+  }
+
+  const getTVDetailsWithSimilarPublic = async (tmdbId) => {
+    try {
+      return await apiCall(`/tv/details-with-similar-public/${tmdbId}`)
+    } catch (error) {
+      return { success: false }
+    }
+  }
+
   return {
     getHybridRecommendations,
     getEmotionRecommendations,
     getMovieDetail,
+    getMovieDetailsWithSimilar,
+    getMovieDetailsWithSimilarPublic,
     getTVDetail,
+    getTVDetailsWithSimilar,
+    getTVDetailsWithSimilarPublic,
     getWatchProviders,
     getPopularMovies,
     getPopularTVShows,

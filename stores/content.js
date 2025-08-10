@@ -7,6 +7,7 @@ export const useContentStore = defineStore('content', () => {
   const recommendedMovies = ref([])
   const isLoading = ref(false)
   const recentSearches = ref([])
+  const genreSectionsByType = ref({ movie: [], tv: [] })
 
   // Getters
   const hasPopularMovies = computed(() => popularMovies.value.length > 0)
@@ -24,6 +25,14 @@ export const useContentStore = defineStore('content', () => {
 
   const setRecommendedMovies = (movies) => {
     recommendedMovies.value = movies
+  }
+
+  const setGenreSections = (type, sections) => {
+    const normalizedType = type === 'tv' ? 'tv' : 'movie'
+    genreSectionsByType.value = {
+      ...genreSectionsByType.value,
+      [normalizedType]: sections || []
+    }
   }
 
   const setLoading = (loading) => {
@@ -68,6 +77,7 @@ export const useContentStore = defineStore('content', () => {
     recommendedMovies,
     isLoading,
     recentSearches,
+    genreSectionsByType,
     
     // Getters
     hasPopularMovies,
@@ -78,6 +88,7 @@ export const useContentStore = defineStore('content', () => {
     setPopularMovies,
     setPopularTVShows,
     setRecommendedMovies,
+    setGenreSections,
     setLoading,
     addRecentSearch,
     clearRecentSearches,

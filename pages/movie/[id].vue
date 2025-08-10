@@ -417,7 +417,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -442,11 +442,14 @@ const loadMovieDetail = async () => {
   isLoading.value = true
   
   try {
-    const { getMovieDetail } = useApi()
-    const response = await getMovieDetail(movieId)
+    const { getMovieDetailsWithSimilar, getMovieDetailsWithSimilarPublic } = useApi()
+    const { isLoggedIn } = useAuth()
+    const response = isLoggedIn.value
+      ? await getMovieDetailsWithSimilar(movieId)
+      : await getMovieDetailsWithSimilarPublic(movieId)
     
     if (response.success && response.data) {
-      const data = response.data
+      const data = response.data.detail || response.data
       movieDetail.value = {
         tmdb_id: data.id,
         title: data.title,
@@ -462,8 +465,17 @@ const loadMovieDetail = async () => {
         production_companies: data.production_companies || []
       }
     }
-    
-    similarMovies.value = mockSimilarMovies
+    // similar
+    if (response.success && response.data?.similar) {
+      similarMovies.value = response.data.similar.map(s => ({
+        id: s.tmdb_id,
+        title: s.title || s.name,
+        rating: s.vote_average,
+        poster: s.poster_path,
+      }))
+    } else {
+      similarMovies.value = mockSimilarMovies
+    }
     
     await loadWatchProviders()
     
@@ -574,15 +586,14 @@ const rateMovie = async (rating) => {
     console.error('Puanlama hatası:', error)
   }
 }
-onMounted(() => {
-  loadMovieDetail()
-})
-
-watchEffect(() => {
-  if (route.params.id) {
+// Tek kaynaklı tetikleme: id değiştiğinde detayları yükle
+watch(
+  () => route.params.id,
+  () => {
     loadMovieDetail()
-  }
-})
+  },
+  { immediate: true }
+)
 useHead({
   title: computed(() => movieDetail.value ? `${movieDetail.value.title} - Parotia` : 'Film Detayı - Parotia'),
   meta: [

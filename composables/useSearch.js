@@ -5,19 +5,7 @@ export const useSearch = () => {
 
   const handleSearchInput = (query) => {
     searchStore.setExpandingSearchQuery(query)
-    
-    if (searchStore.expandingSearchTimeout) {
-      clearTimeout(searchStore.expandingSearchTimeout)
-    }
-    
-    if (query.trim()) {
-      const timeout = setTimeout(() => {
-        performSearch(query)
-      }, 300)
-      searchStore.setExpandingSearchTimeout(timeout)
-    } else {
-      searchStore.clearSearchResults()
-    }
+    // Otomatik arama kaldırıldı - sadece Enter veya butona tıklayınca arama yapılacak
   }
 
   const performSearch = async (query) => {
@@ -34,10 +22,19 @@ export const useSearch = () => {
 
   const selectSearchResult = async (result) => {
     try {
-      const response = await getWatchProviders(result.id, searchStore.expandingSearchCountry)
+      console.log('selectSearchResult called with:', result)
+      
+      // API'den gelen veri yapısına göre ID'yi al - tmdb_id kullan
+      const contentId = result.tmdb_id
+      console.log('Getting watch providers for contentId:', contentId, 'country:', searchStore.expandingSearchCountry)
+      
+      const response = await getWatchProviders(contentId, searchStore.expandingSearchCountry)
+      console.log('Watch providers response:', response)
       
       if (response.success && response.data?.results) {
         const countryData = response.data.results[searchStore.expandingSearchCountry]
+        console.log('Country data:', countryData)
+        
         if (countryData?.flatrate) {
           const providers = countryData.flatrate.map(provider => ({
             id: provider.provider_id,
@@ -45,10 +42,15 @@ export const useSearch = () => {
             color: '#E50914',
             logo: provider.logo_path
           }))
+          console.log('Setting providers:', providers)
           searchStore.setSelectedExpandingSearchProviders(providers)
         } else {
+          console.log('No flatrate providers found')
           searchStore.setSelectedExpandingSearchProviders([])
         }
+      } else {
+        console.log('No results in response')
+        searchStore.setSelectedExpandingSearchProviders([])
       }
     } catch (error) {
       console.error('Provider bilgisi alınırken hata:', error)
@@ -56,12 +58,28 @@ export const useSearch = () => {
       searchStore.setSelectedExpandingSearchProviders(fallbackProviders)
     }
     
-    contentStore.addRecentSearch(result)
+    // Recent search için veri yapısını düzelt
+    const searchData = {
+      id: result.tmdb_id,
+      title: result.title,
+      poster: result.poster_path,
+      type: result.content_type,
+      year: result.year
+    }
+    contentStore.addRecentSearch(searchData)
   }
 
   const selectRecentSearch = async (search) => {
     searchStore.setExpandingSearchQuery(search.title)
-    await selectSearchResult(search)
+    // Recent search için veri yapısını düzelt
+    const searchData = {
+      id: search.id,
+      title: search.title,
+      poster_path: search.poster,
+      content_type: search.type,
+      year: search.year
+    }
+    await selectSearchResult(searchData)
   }
 
   const toggleSearch = () => {
@@ -77,16 +95,31 @@ export const useSearch = () => {
   }
 
   const handleSearchBlur = () => {
-    setTimeout(() => {
-      if (!searchStore.isExpandingSearchExpanded) {
-        searchStore.setShowExpandingSearchDropdown(false)
-      }
-    }, 200)
+    // Modal kapanma mantığı kaldırıldı - sadece ESC veya dışına tıklayınca kapanacak
   }
 
-  const performSearchOnEnter = () => {
-    if (searchStore.expandingSearchQuery.trim() && searchStore.expandingSearchResults.length > 0) {
-      selectSearchResult(searchStore.expandingSearchResults[0])
+  const performSearchOnEnter = async () => {
+    const query = searchStore.expandingSearchQuery.trim()
+    if (query) {
+      try {
+        // Search endpoint'ine istek at
+        const results = await useContent().searchContent(query, 1, 'all')
+        
+        console.log('Search results:', results) // Debug için
+        
+        searchStore.setExpandingSearchResults(results)
+        
+        // Eğer sonuç varsa ilkini seç
+        if (results.length > 0) {
+          await selectSearchResult(results[0])
+        } else {
+          // Sonuç yoksa kullanıcıya bilgi ver
+          console.log('Arama sonucu bulunamadı')
+        }
+      } catch (error) {
+        console.error('Search endpoint error:', error)
+        searchStore.setExpandingSearchResults([])
+      }
     }
   }
 
