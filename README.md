@@ -1,10 +1,10 @@
-# 🎬 Parotia - Duygu Bazlı Film Öneri Sistemi
+# 🎬 movAi - Duygu Bazlı Film Öneri Sistemi
 
 Ruh halinize göre mükemmel film ve dizi önerilerini keşfedin.
 
 ## 📋 Proje Hakkında
 
-Parotia, kullanıcıların duygusal durumlarına göre kişiselleştirilmiş film ve dizi önerileri sunan modern bir web uygulamasıdır. Yapay zeka destekli öneri sistemi ile kullanıcılara en uygun içerikleri bulma deneyimi sağlar.
+movAi, kullanıcıların duygusal durumlarına göre kişiselleştirilmiş film ve dizi önerileri sunan modern bir web uygulamasıdır. Yapay zeka destekli öneri sistemi ile kullanıcılara en uygun içerikleri bulma deneyimi sağlar.
 
 ## ✨ Özellikler
 
@@ -109,7 +109,7 @@ bun run preview
 ## 📁 Proje Yapısı
 
 ```
-parotia-ui/
+movai-ui/
 ├── assets/
 │   └── css/           # Global stiller
 ├── composables/       # Vue composable'lar

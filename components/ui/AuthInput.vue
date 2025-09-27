@@ -12,6 +12,8 @@
       :placeholder="placeholder"
       :required="required"
       :disabled="disabled"
+      :maxlength="maxlength"
+      :inputmode="inputmode"
       :class="[
         'w-full px-4 py-3 bg-white/10 border rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 transition-colors',
         error ? 'border-red-400 focus:ring-red-400' : 'border-white/20 focus:ring-blue-500',
@@ -62,6 +64,14 @@ defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  maxlength: {
+    type: [Number, String],
+    default: undefined
+  },
+  inputmode: {
+    type: String,
+    default: undefined
   },
   error: {
     type: String,

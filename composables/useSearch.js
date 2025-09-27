@@ -24,8 +24,8 @@ export const useSearch = () => {
     try {
       console.log('selectSearchResult called with:', result)
       
-      // API'den gelen veri yapısına göre ID'yi al - tmdb_id kullan
-      const contentId = result.tmdb_id
+      // API'den gelen veri yapısına göre ID'yi al - öncelik tmdb_id, yoksa id
+      const contentId = result.tmdb_id ?? result.id
       console.log('Getting watch providers for contentId:', contentId, 'country:', searchStore.expandingSearchCountry)
       
       const response = await getWatchProviders(contentId, searchStore.expandingSearchCountry)
@@ -60,7 +60,7 @@ export const useSearch = () => {
     
     // Recent search için veri yapısını düzelt
     const searchData = {
-      id: result.tmdb_id,
+      id: result.tmdb_id ?? result.id,
       title: result.title,
       poster: result.poster_path,
       type: result.content_type,
@@ -73,6 +73,7 @@ export const useSearch = () => {
     searchStore.setExpandingSearchQuery(search.title)
     // Recent search için veri yapısını düzelt
     const searchData = {
+      tmdb_id: search.id, // selectSearchResult için tmdb_id bekleniyor
       id: search.id,
       title: search.title,
       poster_path: search.poster,

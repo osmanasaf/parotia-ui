@@ -7,10 +7,10 @@ import { useFormValidation } from '~/composables/useFormValidation'
 export const useAuth = () => {
   const authStore = useAuthStore()
   const { setToken, removeToken, getAuthHeaders } = useTokenManager()
-  const { validateLoginForm, validateRegisterForm, validateVerificationForm } = useFormValidation()
+  const { validateLoginForm, validateVerificationForm } = useFormValidation()
   const config = useRuntimeConfig()
 
-  // JWT token'dan user bilgilerini çıkar
+  // Decode user info from JWT
   const decodeJWT = (token) => {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]))
@@ -33,7 +33,7 @@ export const useAuth = () => {
     }
   }
 
-  // API çağrıları
+  // API calls
   const register = async (userData) => {
     try {
       authStore.setLoading(true)
@@ -44,7 +44,7 @@ export const useAuth = () => {
         body: userData
       })
 
-      // Backend response formatını kontrol et
+      // Validate backend response shape
       if (response.id || response.email) {
         return { success: true, user: response, message: AUTH_CONSTANTS.SUCCESS_MESSAGES.REGISTER_SUCCESS }
       } else {
@@ -76,11 +76,11 @@ export const useAuth = () => {
         body: credentials
       })
 
-      // Backend'den gelen response formatını kontrol et
+      // Validate response shape
       if (response.access_token) {
         setToken(response.access_token)
         
-        // Token'dan user bilgilerini çıkar (JWT decode)
+        // Decode user info from token
         const user = decodeJWT(response.access_token)
         authStore.setUser(user)
         
@@ -94,7 +94,7 @@ export const useAuth = () => {
       console.log('Error data:', error.data)
       console.log('Error response:', error.response)
       
-      // Email doğrulanmamış hatası kontrolü - tüm olası formatları kontrol et
+      // Check unverified email error for various shapes
       const errorData = error.data || error.response?.data || error
       const errorCode = errorData?.error_code || errorData?.detail?.error_code
       const errorMessage = errorData?.message || errorData?.detail?.message || errorData?.detail || errorData?.statusMessage
@@ -102,13 +102,13 @@ export const useAuth = () => {
       if (errorCode === 'EMAIL_NOT_VERIFIED') {
         return { 
           success: false, 
-          error: errorMessage || 'Lütfen giriş yapmadan önce email adresinizi doğrulayın',
+          error: errorMessage || 'Please verify your email before logging in',
           requiresVerification: true,
           email: credentials.email
         }
       }
       
-      // Diğer hata durumları
+      // Other error cases
       const finalErrorMessage = errorMessage || AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR
       authStore.setError(finalErrorMessage)
       return { success: false, error: finalErrorMessage }
@@ -133,7 +133,7 @@ export const useAuth = () => {
         headers
       })
 
-      // Backend response formatını kontrol et
+      // Validate response shape
       if (response.id || response.email) {
         authStore.setUser(response)
         return { success: true, user: response }
@@ -157,7 +157,7 @@ export const useAuth = () => {
         method: 'POST'
       })
 
-      // Backend response formatını kontrol et
+      // Validate response shape
       if (response.message || response.success) {
         return { success: true, message: response.message || AUTH_CONSTANTS.SUCCESS_MESSAGES.VERIFICATION_SENT }
       } else {
@@ -188,13 +188,13 @@ export const useAuth = () => {
         method: 'POST'
       })
 
-      // Backend response formatını kontrol et
+      // Validate response shape
       if (response.message || response.success || response.id) {
         return { 
           success: true, 
           message: response.message || AUTH_CONSTANTS.SUCCESS_MESSAGES.EMAIL_VERIFIED, 
           user: response.id ? response : null,
-          email: email // Email'i de döndür ki login formuna geçebilsin
+          email: email // Pass back email for login form convenience
         }
       } else {
         authStore.setError(AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR)
@@ -202,6 +202,139 @@ export const useAuth = () => {
       }
     } catch (error) {
       const errorMessage = error.data?.statusMessage || AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR
+      authStore.setError(errorMessage)
+      return { success: false, error: errorMessage }
+    } finally {
+      authStore.setLoading(false)
+    }
+  }
+
+  const updateProfile = async (profileUpdates) => {
+    try {
+      authStore.setLoading(true)
+      authStore.clearError()
+
+      const headers = getAuthHeaders()
+      if (!headers.Authorization) {
+        return { success: false, error: 'Authentication required' }
+      }
+
+      const response = await $fetch(`${config.public.apiBaseUrl}${AUTH_CONSTANTS.ENDPOINTS.ME}`, {
+        method: 'PUT',
+        headers,
+        body: profileUpdates
+      })
+
+      const updatedUser = response?.user || response
+
+      if (updatedUser?.id || updatedUser?.email) {
+        authStore.setUser(updatedUser)
+        return { success: true, user: updatedUser, message: AUTH_CONSTANTS.SUCCESS_MESSAGES.PROFILE_UPDATED }
+      }
+
+      const fallbackMessage = AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR
+      authStore.setError(fallbackMessage)
+      return { success: false, error: fallbackMessage }
+    } catch (error) {
+      const errorMessage = error.data?.statusMessage || error.data?.detail || AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR
+      authStore.setError(errorMessage)
+      return { success: false, error: errorMessage }
+    } finally {
+      authStore.setLoading(false)
+    }
+  }
+
+  const changePassword = async ({ current_password, new_password }) => {
+    try {
+      authStore.setLoading(true)
+      authStore.clearError()
+
+      const headers = getAuthHeaders()
+      if (!headers.Authorization) {
+        return { success: false, error: 'Authentication required' }
+      }
+
+      const response = await $fetch(`${config.public.apiBaseUrl}${AUTH_CONSTANTS.ENDPOINTS.CHANGE_PASSWORD}`, {
+        method: 'POST',
+        headers,
+        body: { current_password, new_password }
+      })
+
+      if (response?.message || response?.success) {
+        return { success: true, message: response.message || AUTH_CONSTANTS.SUCCESS_MESSAGES.PASSWORD_CHANGED }
+      }
+
+      const fallbackMessage = AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR
+      authStore.setError(fallbackMessage)
+      return { success: false, error: fallbackMessage }
+    } catch (error) {
+      const errorMessage = error.data?.statusMessage || error.data?.detail || AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR
+      authStore.setError(errorMessage)
+      return { success: false, error: errorMessage }
+    } finally {
+      authStore.setLoading(false)
+    }
+  }
+
+  const requestEmailChange = async (newEmail) => {
+    try {
+      authStore.setLoading(true)
+      authStore.clearError()
+
+      const headers = getAuthHeaders()
+      if (!headers.Authorization) {
+        return { success: false, error: 'Authentication required' }
+      }
+
+      const response = await $fetch(`${config.public.apiBaseUrl}${AUTH_CONSTANTS.ENDPOINTS.REQUEST_EMAIL_CHANGE}`, {
+        method: 'POST',
+        headers,
+        body: { new_email: newEmail }
+      })
+
+      if (response?.message || response?.success) {
+        return { success: true, message: response.message || AUTH_CONSTANTS.SUCCESS_MESSAGES.EMAIL_CHANGE_REQUESTED }
+      }
+
+      const fallbackMessage = AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR
+      authStore.setError(fallbackMessage)
+      return { success: false, error: fallbackMessage }
+    } catch (error) {
+      const errorMessage = error.data?.statusMessage || error.data?.detail || AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR
+      authStore.setError(errorMessage)
+      return { success: false, error: errorMessage }
+    } finally {
+      authStore.setLoading(false)
+    }
+  }
+
+  const confirmEmailChange = async ({ new_email, code }) => {
+    try {
+      authStore.setLoading(true)
+      authStore.clearError()
+
+      const headers = getAuthHeaders()
+      if (!headers.Authorization) {
+        return { success: false, error: 'Authentication required' }
+      }
+
+      const response = await $fetch(`${config.public.apiBaseUrl}${AUTH_CONSTANTS.ENDPOINTS.CONFIRM_EMAIL_CHANGE}`, {
+        method: 'POST',
+        headers,
+        body: { new_email, code }
+      })
+
+      const updatedUser = response?.user || response
+      if (updatedUser?.email) {
+        authStore.setUser(updatedUser)
+        return { success: true, user: updatedUser, message: response?.message || AUTH_CONSTANTS.SUCCESS_MESSAGES.EMAIL_CHANGED }
+      }
+
+      const fallbackMessage = AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR
+      authStore.setError(fallbackMessage)
+      return { success: false, error: fallbackMessage }
+    } catch (error) {
+      const errorMessage = error.data?.statusMessage || error.data?.detail || AUTH_CONSTANTS.ERROR_MESSAGES.NETWORK_ERROR
       authStore.setError(errorMessage)
       return { success: false, error: errorMessage }
     } finally {
@@ -228,6 +361,10 @@ export const useAuth = () => {
     logout,
     getCurrentUser,
     sendVerificationCode,
-    verifyEmail
+    verifyEmail,
+    updateProfile,
+    changePassword,
+    requestEmailChange,
+    confirmEmailChange
   }
 } 

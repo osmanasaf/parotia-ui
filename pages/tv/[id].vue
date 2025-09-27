@@ -18,7 +18,7 @@
             <NuxtLink to="/" class="flex items-center">
               <div class="flex-shrink-0">
                 <h1 class="text-3xl font-bold font-space text-gradient">
-                  🐦 PAROTIA
+                  🎬 movAi
                 </h1>
               </div>
             </NuxtLink>
@@ -572,7 +572,7 @@ watch(
 )
 
 useHead({
-  title: computed(() => tvDetail.value ? `${tvDetail.value.name} - Parotia` : 'TV Show Details - Parotia'),
+  title: computed(() => tvDetail.value ? `${tvDetail.value.name} - movAi` : 'TV Show Details - movAi'),
   meta: [
     { name: 'description', content: computed(() => tvDetail.value?.overview || 'TV show details page') }
   ]

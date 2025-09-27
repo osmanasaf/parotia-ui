@@ -4,6 +4,7 @@
     <ClientOnly>
       <AuthModal />
     </ClientOnly>
+    <AppFooter />
   </div>
 </template>
 
@@ -11,12 +12,13 @@
 import { onMounted } from 'vue'
 import { useAuth } from '~/composables/useAuth'
 import { AuthModal } from '~/components/ui'
+import AppFooter from '~/components/layout/AppFooter.vue'
 
 const { getCurrentUser } = useAuth()
 
 useHead({
   htmlAttrs: {
-    lang: 'tr'
+    lang: 'en'
   },
   meta: [
     { name: 'theme-color', content: '#a855f7' },

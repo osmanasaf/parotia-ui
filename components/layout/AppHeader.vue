@@ -5,9 +5,7 @@
         <div class="flex items-center">
           <div class="flex-shrink-0">
             <NuxtLink to="/" class="block focus:outline-none">
-              <h1 class="text-3xl font-bold font-space text-gradient">
-                🐦 PAROTIA
-              </h1>
+              <Logo size="md" />
             </NuxtLink>
           </div>
         </div>
@@ -40,6 +38,7 @@
 // Smart component - handles layout logic
 import ExpandingSearch from '~/components/ui/ExpandingSearch.vue'
 import LoginButton from '~/components/ui/LoginButton.vue'
+import Logo from '~/components/ui/Logo.vue'
 
 const route = useRoute()
 const isMoviesActive = computed(() => route.path.startsWith('/movie'))

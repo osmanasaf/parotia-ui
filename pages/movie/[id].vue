@@ -18,7 +18,7 @@
             <NuxtLink to="/" class="flex items-center">
               <div class="flex-shrink-0">
                 <h1 class="text-2xl font-bold text-white">
-                  🐦 PAROTIA
+                  🎬 movAi
                 </h1>
               </div>
             </NuxtLink>
@@ -595,7 +595,7 @@ watch(
   { immediate: true }
 )
 useHead({
-  title: computed(() => movieDetail.value ? `${movieDetail.value.title} - Parotia` : 'Film Detayı - Parotia'),
+  title: computed(() => movieDetail.value ? `${movieDetail.value.title} - movAi` : 'Movie Details - movAi'),
   meta: [
     { name: 'description', content: computed(() => movieDetail.value?.overview || 'Film detay sayfası') }
   ]

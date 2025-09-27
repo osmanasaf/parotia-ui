@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { AUTH_CONSTANTS } from '~/constants'
 
 export const useAuthStore = defineStore('auth', () => {
   // State - sadece authentication durumu
@@ -13,6 +12,8 @@ export const useAuthStore = defineStore('auth', () => {
   const hasUser = computed(() => user.value !== null)
   const username = computed(() => user.value?.username || '')
   const email = computed(() => user.value?.email || '')
+  const firstName = computed(() => user.value?.first_name || '')
+  const lastName = computed(() => user.value?.last_name || '')
   const isVerified = computed(() => user.value?.is_verified || false)
 
   // Actions - sadece state yönetimi
@@ -50,6 +51,8 @@ export const useAuthStore = defineStore('auth', () => {
     hasUser,
     username,
     email,
+    firstName,
+    lastName,
     isVerified,
     
     // Actions

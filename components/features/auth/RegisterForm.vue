@@ -1,14 +1,34 @@
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <AuthInput
+        id="register-first-name"
+        v-model="form.first_name"
+        label="First name"
+        type="text"
+        placeholder="First name (optional)"
+        :error="errors.first_name"
+        @keyup-enter="handleSubmit"
+      />
+      <AuthInput
+        id="register-last-name"
+        v-model="form.last_name"
+        label="Last name"
+        type="text"
+        placeholder="Last name (optional)"
+        :error="errors.last_name"
+        @keyup-enter="handleSubmit"
+      />
+    </div>
     <AuthInput
       id="register-username"
       v-model="form.username"
-      label="Kullanıcı Adı"
+      label="Username"
       type="text"
       placeholder="kullanici_adi"
       required
       :error="errors.username"
-      hint="Sadece harf, rakam ve alt çizgi kullanabilirsiniz"
+      hint="Only letters, numbers and underscore are allowed"
       @keyup-enter="handleSubmit"
     />
 
@@ -26,21 +46,21 @@
     <AuthInput
       id="register-password"
       v-model="form.password"
-      label="Şifre"
+      label="Password"
       type="password"
-      placeholder="Güçlü bir şifre oluşturun"
+      placeholder="Create a strong password"
       required
       :error="errors.password"
-      hint="En az 8 karakter, büyük/küçük harf ve rakam içermeli"
+      hint="At least 8 characters, include upper/lowercase and numbers"
       @keyup-enter="handleSubmit"
     />
 
     <AuthInput
       id="register-confirm-password"
       v-model="form.confirmPassword"
-      label="Şifre Tekrar"
+      label="Confirm password"
       type="password"
-      placeholder="Şifrenizi tekrar girin"
+      placeholder="Re-enter your password"
       required
       :error="errors.confirmPassword"
       @keyup-enter="handleSubmit"
@@ -48,16 +68,15 @@
 
     <div class="flex items-center">
       <input
+        id="accept-terms"
         v-model="form.acceptTerms"
         type="checkbox"
         required
         class="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
       />
-      <label class="ml-2 text-sm text-white/70">
-        <a href="/terms" class="text-blue-400 hover:text-blue-300">Kullanım şartlarını</a>
-        ve
-        <a href="/privacy" class="text-blue-400 hover:text-blue-300">gizlilik politikasını</a>
-        kabul ediyorum
+      <label class="ml-2 text-sm text-white/70" for="accept-terms">
+        I accept the <a href="/terms" class="text-blue-400 hover:text-blue-300">Terms of Service</a>
+        and <a href="/privacy" class="text-blue-400 hover:text-blue-300">Privacy Policy</a>
       </label>
     </div>
 
@@ -65,22 +84,21 @@
       type="submit"
       :loading="isLoading"
       :disabled="!isFormValid"
-      loading-text="Hesap oluşturuluyor..."
+      loading-text="Creating account..."
     >
-      Hesap Oluştur
+      Create Account
     </AuthButton>
 
     <div class="text-center">
-      <p class="text-white/70">
-        Zaten hesabınız var mı?
-        <button
-          type="button"
-          class="text-blue-400 hover:text-blue-300 transition-colors font-medium"
-          @click="$emit('showLogin')"
-        >
-          Giriş yap
-        </button>
-      </p>
+      <p class="text-white/70" id="login-link-desc">Already have an account?</p>
+      <button
+        type="button"
+        class="text-blue-400 hover:text-blue-300 transition-colors font-medium"
+        @click="$emit('showLogin')"
+        aria-describedby="login-link-desc"
+      >
+        Sign in
+      </button>
     </div>
   </form>
 </template>
@@ -101,6 +119,8 @@ const form = ref({
   email: '',
   password: '',
   confirmPassword: '',
+  first_name: '',
+  last_name: '',
   acceptTerms: false
 })
 
@@ -126,7 +146,9 @@ const handleSubmit = async () => {
   const result = await register({
     username: form.value.username,
     email: form.value.email,
-    password: form.value.password
+    password: form.value.password,
+    first_name: form.value.first_name || undefined,
+    last_name: form.value.last_name || undefined
   })
 
   if (result.success) {

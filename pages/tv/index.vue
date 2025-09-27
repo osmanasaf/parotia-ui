@@ -56,7 +56,7 @@ onMounted(async () => {
   ])
 })
 
-useHead({ title: 'Diziler - Parotia' })
+useHead({ title: 'Diziler - movAi' })
 </script>
 
 

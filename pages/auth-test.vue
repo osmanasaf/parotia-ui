@@ -168,6 +168,6 @@ const testSendVerification = async () => {
 }
 
 useHead({
-  title: 'Authentication Test - Parotia'
+  title: 'Authentication Test - movAi'
 })
 </script> 

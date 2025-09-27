@@ -14,9 +14,9 @@
     <AuthInput
       id="login-password"
       v-model="form.password"
-      label="Şifre"
+      label="Password"
       type="password"
-      placeholder="Şifrenizi girin"
+      placeholder="Enter your password"
       required
       :error="errors.password"
       @keyup-enter="handleSubmit"
@@ -29,7 +29,7 @@
           type="checkbox"
           class="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
         />
-        <span class="ml-2 text-sm text-white/70">Beni hatırla</span>
+        <span class="ml-2 text-sm text-white/70">Remember me</span>
       </label>
       
       <button
@@ -37,7 +37,7 @@
         class="text-sm text-blue-400 hover:text-blue-300 transition-colors"
         @click="$emit('forgotPassword')"
       >
-        Şifremi unuttum
+        Forgot password
       </button>
     </div>
 
@@ -45,20 +45,20 @@
       type="submit"
       :loading="isLoading"
       :disabled="!isFormValid"
-      loading-text="Giriş yapılıyor..."
+      loading-text="Signing in..."
     >
-      Giriş Yap
+      Sign In
     </AuthButton>
 
     <div class="text-center">
       <p class="text-white/70">
-        Hesabınız yok mu?
+        Don't have an account?
         <button
           type="button"
           class="text-blue-400 hover:text-blue-300 transition-colors font-medium"
           @click="$emit('showRegister')"
         >
-          Hesap oluştur
+          Create an account
         </button>
       </p>
     </div>

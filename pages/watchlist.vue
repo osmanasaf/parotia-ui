@@ -109,7 +109,7 @@ const onDelete = async (item) => {
 }
 
 onMounted(loadData)
-useHead({ title: 'Watchlist - Parotia' })
+useHead({ title: 'Watchlist - movAi' })
 </script>
 
 

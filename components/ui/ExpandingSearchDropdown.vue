@@ -1,5 +1,5 @@
 <template>
-  <div class="expanding-search-dropdown">
+  <div class="expanding-search-dropdown" @click.stop>
     <!-- Header with Country Selector -->
     <div class="search-dropdown-header">
       <div class="search-dropdown-title">SEARCH SETTINGS</div>
@@ -34,6 +34,7 @@
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
@@ -48,7 +49,7 @@
         <div 
           v-for="search in recentSearches.slice(0, 6)" 
           :key="search.id"
-          @click="selectRecentSearch(search)"
+          @click.stop="handleRecentClick(search)"
           class="recent-search-item"
         >
           <NuxtImg 
@@ -88,7 +89,7 @@
 
          <!-- Inline providers panel under the selected result -->
          <div 
-           v-if="selectedResultId === result.tmdb_id && selectedProviders.length > 0"
+           v-if="selectedResultId === result.tmdb_id && !providersLoading && selectedProviders.length > 0"
            class="providers-inline"
          >
            <div class="providers-inline-title">Available on</div>
@@ -113,6 +114,20 @@
                <span class="provider-dropdown-name">{{ provider.name }}</span>
              </div>
            </div>
+         </div>
+         <!-- Providers loading state -->
+         <div
+           v-if="selectedResultId === result.tmdb_id && providersLoading"
+           class="providers-inline providers-loading"
+         >
+           <div class="spinner" aria-label="Loading" />
+         </div>
+         <!-- Providers empty state -->
+         <div
+           v-if="selectedResultId === result.tmdb_id && !providersLoading && selectedProviders.length === 0"
+           class="providers-inline providers-empty"
+         >
+           <div class="providers-inline-title">⚠️ Not available in this country</div>
          </div>
        </div>
      </div>
@@ -139,6 +154,8 @@ const searchResults = computed(() => searchStore.expandingSearchResults)
 const selectedProviders = computed(() => searchStore.selectedExpandingSearchProviders)
 const selectedResultId = ref(null)
 const recentSearches = computed(() => contentStore.recentSearches)
+const providersLoading = ref(false)
+const providersLoadedForId = ref(null)
 
 // Arama yapılıp yapılmadığını takip et
 const hasSearched = ref(false)
@@ -158,9 +175,29 @@ watch(searchQuery, (newQuery) => {
     hasSearched.value = false
   }
 })
-const handleResultClick = (result) => {
-  selectedResultId.value = result.tmdb_id
-  selectSearchResult(result)
+const handleResultClick = async (result) => {
+  selectedResultId.value = result.tmdb_id ?? result.id
+  // Eski provider listesini hemen temizle ki boş/loader durumları doğru görünsün
+  searchStore.setSelectedExpandingSearchProviders([])
+  providersLoading.value = true
+  providersLoadedForId.value = null
+  await selectSearchResult(result)
+  providersLoading.value = false
+  providersLoadedForId.value = result.tmdb_id ?? result.id
+}
+
+const handleRecentClick = async (search) => {
+  // Arama input'unu güncelle
+  searchStore.setExpandingSearchQuery(search.title)
+  // UI: loader ve seçim kimliğini ayarla
+  selectedResultId.value = search.id
+  searchStore.setSelectedExpandingSearchProviders([])
+  providersLoading.value = true
+  providersLoadedForId.value = null
+  // Mevcut composable akışını kullanarak provider çek
+  await selectRecentSearch(search)
+  providersLoading.value = false
+  providersLoadedForId.value = search.id
 }
 
 

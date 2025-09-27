@@ -2,7 +2,7 @@
   <div v-if="isLoginModalOpen" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" @click="closeModal">
     <div class="glass-effect rounded-2xl p-8 max-w-md w-full mx-4" @click.stop>
       <div class="text-center mb-6">
-        <h3 class="text-3xl font-bold font-space text-gradient mb-2">Welcome to Parotia</h3>
+        <h3 class="text-3xl font-bold font-space text-gradient mb-2">Welcome to movAi</h3>
         <p class="text-white/70">Sign in to get personalized recommendations</p>
       </div>
       
@@ -23,6 +23,9 @@
             class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
         </div>
+        <div class="flex justify-end -mt-2">
+          <button @click="openForgot" class="text-blue-400 hover:text-blue-300 text-sm">Forgot your password?</button>
+        </div>
         
         <button 
           @click="handleLogin"
@@ -42,6 +45,37 @@
           >
             Don't have an account? Sign up
           </button>
+        </div>
+
+        <!-- Forgot Password Panel -->
+        <div v-if="showForgot" class="border-t border-white/20 pt-4 mt-2">
+          <h4 class="text-lg font-semibold text-white mb-3">Password Reset</h4>
+          <p class="text-white/70 text-sm mb-3">Enter the email linked to your account. We will send a reset link.</p>
+          <div class="space-y-3">
+            <input 
+              v-model="forgotEmail"
+              type="email" 
+              placeholder="Email address"
+              class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+            <div v-if="forgotError" class="text-red-300 text-sm">{{ forgotError }}</div>
+            <div v-if="forgotSent" class="text-green-300 text-sm">Reset link sent. Check your email.</div>
+            <div class="flex gap-2 justify-end">
+              <button 
+                class="px-3 py-2 rounded-md text-white bg-white/10 hover:bg-white/20"
+                @click="closeForgot"
+                :disabled="forgotLoading"
+              >Cancel</button>
+              <button 
+                class="px-3 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
+                @click="handleForgotSubmit"
+                :disabled="!forgotEmail || forgotLoading"
+              >
+                <span v-if="forgotLoading" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin align-middle mr-2"></span>
+                Send Link
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Register Form -->
@@ -85,6 +119,7 @@
 // Smart component - handles authentication logic
 const authStore = useAuthStore()
 const { login, register } = useAuth()
+const { requestPasswordReset } = useApi()
 
 const loginForm = computed({
   get: () => authStore.loginForm,
@@ -101,6 +136,26 @@ const isRegisterFormVisible = computed({
   get: () => authStore.isRegisterFormVisible,
   set: (value) => authStore.setShowRegisterForm(value)
 })
+
+const showForgot = ref(false)
+const forgotEmail = ref('')
+const forgotLoading = ref(false)
+const forgotSent = ref(false)
+const forgotError = ref('')
+
+const openForgot = () => {
+  showForgot.value = true
+  forgotSent.value = false
+  forgotError.value = ''
+  // mevcut e-postayı kopyala
+  if (loginForm.value?.email) forgotEmail.value = loginForm.value.email
+}
+
+const closeForgot = () => {
+  showForgot.value = false
+  forgotLoading.value = false
+  forgotError.value = ''
+}
 
 const closeModal = () => {
   authStore.setShowLoginModal(false)
@@ -139,6 +194,20 @@ const handleRegister = async () => {
     }
   } catch (error) {
     console.error('Registration error:', error)
+  }
+}
+
+const handleForgotSubmit = async () => {
+  if (!forgotEmail.value) return
+  forgotLoading.value = true
+  forgotError.value = ''
+  try {
+    await requestPasswordReset(forgotEmail.value)
+    forgotSent.value = true
+  } catch (error) {
+    forgotError.value = error?.data?.message || 'İşlem sırasında bir hata oluştu.'
+  } finally {
+    forgotLoading.value = false
   }
 }
 </script> 

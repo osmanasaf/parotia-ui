@@ -74,6 +74,57 @@
           @back-to-login="showLogin"
           @show-login="handleShowLogin"
         />
+
+        <!-- Forgot Password Panel -->
+        <div v-if="activeForm === 'forgot'" class="space-y-4">
+          <div class="text-white/80 text-sm">
+            {{ forgotStep === 1 ? 'Enter your email address. We will send a password reset link.' : 'Enter the code from your email and your new password.' }}
+          </div>
+          <input
+            v-model="forgotEmail"
+            type="email"
+            placeholder="Email address"
+            class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            :disabled="forgotStep !== 1"
+          />
+          <div v-if="forgotStep === 2" class="space-y-3">
+            <input
+              v-model="forgotCode"
+              type="text"
+              placeholder="Verification code"
+              class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              v-model="forgotNewPassword"
+              type="password"
+              placeholder="New password"
+              class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div v-if="forgotError" class="text-red-300 text-sm">{{ forgotError }}</div>
+          <div v-if="forgotSent && forgotStep === 1" class="text-green-300 text-sm">Link sent. Check your email.</div>
+          <div class="flex gap-2 justify-end">
+            <button class="px-3 py-2 rounded-md text-white bg-white/10 hover:bg-white/20" @click="showLogin" :disabled="forgotLoading">Back</button>
+            <button
+              v-if="forgotStep === 1"
+              class="px-3 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
+              @click="handleForgotSubmit"
+              :disabled="!forgotEmail || forgotLoading"
+            >
+              <span v-if="forgotLoading" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin align-middle mr-2"></span>
+              Send Link
+            </button>
+            <button
+              v-else
+              class="px-3 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
+              @click="handleForgotConfirm"
+              :disabled="!forgotEmail || !forgotCode || !forgotNewPassword || forgotLoading"
+            >
+              <span v-if="forgotLoading" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin align-middle mr-2"></span>
+              Reset Password
+            </button>
+          </div>
+        </div>
       </ClientOnly>
     </div>
   </div>
@@ -87,6 +138,7 @@ import { LoginForm, RegisterForm, VerificationForm } from '~/components/features
 
 const uiStore = useUIStore()
 const { error } = useAuth()
+const { requestPasswordReset, resetPassword } = useApi()
 
 // Computed properties
 const isOpen = computed(() => uiStore.isLoginModalOpen)
@@ -97,31 +149,44 @@ const successMessage = ref('')
 const modalTitle = computed(() => {
   switch (activeForm.value) {
     case 'login':
-      return 'Giriş Yap'
+      return 'Sign In'
     case 'register':
-      return 'Hesap Oluştur'
+      return 'Create Account'
     case 'verification':
-      return 'Email Doğrulama'
+      return 'Email Verification'
+    case 'forgot':
+      return 'Reset Password'
     default:
-      return 'Giriş Yap'
+      return 'Sign In'
   }
 })
 
 const modalSubtitle = computed(() => {
   switch (activeForm.value) {
     case 'login':
-      return 'Hesabınıza giriş yapın'
+      return 'Sign in to your account'
     case 'register':
-      return 'Yeni hesap oluşturun'
+      return 'Create a new account'
     case 'verification':
-      return 'Email adresinizi doğrulayın'
+      return 'Verify your email address'
+    case 'forgot':
+      return 'We will send a reset link/code to your email'
     default:
-      return 'Hesabınıza giriş yapın'
+      return 'Sign in to your account'
   }
 })
 
 // Verification email state
 const verificationEmail = ref('')
+
+// Forgot state
+const forgotEmail = ref('')
+const forgotCode = ref('')
+const forgotNewPassword = ref('')
+const forgotStep = ref(1) // 1: request, 2: confirm
+const forgotLoading = ref(false)
+const forgotSent = ref(false)
+const forgotError = ref('')
 
 // Event handlers
 const closeModal = () => {
@@ -134,6 +199,12 @@ const handleBackdropClick = () => {
 
 const showLogin = () => {
   uiStore.backToLogin()
+  forgotEmail.value = ''
+  forgotCode.value = ''
+  forgotNewPassword.value = ''
+  forgotSent.value = false
+  forgotError.value = ''
+  forgotStep.value = 1
 }
 
 const showRegister = () => {
@@ -142,7 +213,6 @@ const showRegister = () => {
 
 const handleLoginSuccess = (user) => {
   closeModal()
-  // Başarı mesajı gösterilebilir
 }
 
 const handleRegisterSuccess = (user) => {
@@ -151,10 +221,7 @@ const handleRegisterSuccess = (user) => {
 }
 
 const handleVerificationSuccess = (result) => {
-  // Başarı mesajını göster
-  successMessage.value = result.message || 'Email adresiniz başarıyla doğrulandı!'
-  
-  // 3 saniye sonra login formuna geç
+  successMessage.value = result.message || 'Your email has been verified successfully!'
   setTimeout(() => {
     successMessage.value = ''
     if (result.email) {
@@ -170,27 +237,53 @@ const handleShowVerification = (email) => {
 }
 
 const handleShowLogin = (email) => {
-  // Login formuna geç ve email'i doldur
   uiStore.backToLogin()
-  // Email'i login formuna geçirmek için bir yöntem bulunabilir
 }
 
-const handleError = (errorMsg) => {
-  // Error zaten store'da yönetiliyor
-}
+const handleError = (errorMsg) => {}
 
 const handleForgotPassword = () => {
-  // Şifre sıfırlama sayfasına yönlendir
-  closeModal()
-  navigateTo('/forgot-password')
+  forgotEmail.value = ''
+  forgotError.value = ''
+  forgotSent.value = false
+  forgotStep.value = 1
+  uiStore.activeForm = 'forgot'
+}
+
+const handleForgotSubmit = async () => {
+  if (!forgotEmail.value) return
+  forgotLoading.value = true
+  forgotError.value = ''
+  try {
+    await requestPasswordReset(forgotEmail.value)
+    forgotSent.value = true
+    forgotStep.value = 2
+  } catch (e) {
+    forgotError.value = e?.data?.message || 'İşlem sırasında bir hata oluştu.'
+  } finally {
+    forgotLoading.value = false
+  }
+}
+
+const handleForgotConfirm = async () => {
+  if (!forgotEmail.value || !forgotCode.value || !forgotNewPassword.value) return
+  forgotLoading.value = true
+  forgotError.value = ''
+  try {
+    await resetPassword(forgotEmail.value, forgotCode.value, forgotNewPassword.value)
+    successMessage.value = 'Şifren başarıyla güncellendi. Giriş yapabilirsin.'
+    showLogin()
+  } catch (e) {
+    forgotError.value = e?.data?.message || 'İşlem sırasında bir hata oluştu.'
+  } finally {
+    forgotLoading.value = false
+  }
 }
 
 // Error değişikliklerini dinle
 watch(error, (newError) => {
   if (newError) {
-    // Error mesajını 5 saniye sonra temizle
     setTimeout(() => {
-      // Error store'dan temizlenir
     }, 5000)
   }
 })

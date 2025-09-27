@@ -57,7 +57,7 @@ onMounted(async () => {
   ])
 })
 
-useHead({ title: 'Filmler - Parotia' })
+useHead({ title: 'Filmler - movAi' })
 </script>
 
 

@@ -14,24 +14,29 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.API_BASE_URL || 'http://localhost:8000'
+      apiBaseUrl: process.env.API_BASE_URL || 'http://localhost:8000',
+      siteUrl: process.env.SITE_URL || 'http://localhost:3000'
     }
   },
 
   app: {
     head: {
-      title: 'Parotia - Duygu Bazlı Film Öneri Sistemi',
+      titleTemplate: (chunk) => chunk ? `${chunk} | movAi` : 'movAi - Emotion-Based Movie Recommendation',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Ruh halinize göre mükemmel film ve dizi önerilerini keşfedin.' },
-        { name: 'keywords', content: 'film, dizi, öneri, duygu, AI, yapay zeka' },
-        { property: 'og:title', content: 'Parotia - Duygu Bazlı Film Öneri Sistemi' },
-        { property: 'og:description', content: 'Ruh halinize göre mükemmel film ve dizi önerilerini keşfedin.' },
-        { property: 'og:type', content: 'website' }
+        { name: 'description', content: 'Discover perfect movie and TV recommendations based on your mood.' },
+        { name: 'keywords', content: 'movie, tv, recommendation, emotion, AI, artificial intelligence' },
+        { property: 'og:title', content: 'movAi - Emotion-Based Movie Recommendation' },
+        { property: 'og:description', content: 'Discover perfect movie and TV recommendations based on your mood.' },
+        { property: 'og:type', content: 'website' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'movAi - Emotion-Based Movie Recommendation' },
+        { name: 'twitter:description', content: 'Discover perfect movie and TV recommendations based on your mood.' },
+        { name: 'twitter:image', content: '/og-image.svg' }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap' }

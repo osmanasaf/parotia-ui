@@ -42,7 +42,7 @@ defineProps({
   },
   loadingText: {
     type: String,
-    default: 'Yükleniyor...'
+    default: 'Loading...'
   }
 })
 

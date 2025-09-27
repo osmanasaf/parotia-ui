@@ -41,7 +41,7 @@ onMounted(async () => {
 })
 
 useHead({
-  title: 'Parotia - Duygu Bazlı Film Öneri Sistemi',
+  title: 'movAi - Duygu Bazlı Film Öneri Sistemi',
   meta: [
     { name: 'description', content: 'Ruh halinize göre mükemmel film ve dizi önerilerini keşfedin.' }
   ]

@@ -2,9 +2,9 @@
   <form @submit.prevent="handleSubmit" class="space-y-6">
     <div class="text-center mb-6">
       <div class="text-4xl mb-4">📧</div>
-      <h3 class="text-xl font-semibold text-white mb-2">Email Doğrulama</h3>
+      <h3 class="text-xl font-semibold text-white mb-2">Email Verification</h3>
       <p class="text-white/70">
-        {{ email }} adresine gönderilen 6 haneli doğrulama kodunu girin
+        Enter the 6-digit verification code sent to {{ email }}
       </p>
     </div>
 
@@ -21,12 +21,12 @@
     <AuthInput
       id="verification-code"
       v-model="form.code"
-      label="Doğrulama Kodu"
+      label="Verification Code"
       type="text"
       placeholder="123456"
       required
       :error="errors.code"
-      hint="6 haneli kodu girin"
+      hint="Enter the 6-digit code"
       maxlength="6"
     />
 
@@ -34,9 +34,9 @@
       type="submit"
       :loading="isLoading"
       :disabled="!isFormValid"
-      loading-text="Doğrulanıyor..."
+      loading-text="Verifying..."
     >
-      Email'i Doğrula
+      Verify Email
     </AuthButton>
 
     <div class="text-center space-y-3">
@@ -46,7 +46,7 @@
         @click="resendCode"
         :disabled="isResending"
       >
-        {{ isResending ? 'Kod gönderiliyor...' : 'Kodu tekrar gönder' }}
+        {{ isResending ? 'Sending code...' : 'Resend code' }}
       </button>
 
       <div>
@@ -55,7 +55,7 @@
           class="text-sm text-white/70 hover:text-white transition-colors"
           @click="$emit('backToLogin')"
         >
-          ← Giriş sayfasına dön
+          ← Back to sign in
         </button>
       </div>
     </div>
@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useAuth } from '~/composables/useAuth'
 import { useFormValidation } from '~/composables/useFormValidation'
 import { AuthInput, AuthButton } from '~/components/ui'
@@ -106,9 +106,8 @@ const handleSubmit = async () => {
   const result = await verifyEmail(form.value.email, form.value.code)
 
   if (result.success) {
-    // Başarılı doğrulama sonrası login formuna yönlendir
     emit('success', { 
-      message: result.message || 'Email adresiniz başarıyla doğrulandı! Giriş yapabilirsiniz.',
+      message: result.message || 'Your email has been verified successfully! You can sign in now.',
       email: result.email 
     })
     emit('showLogin', result.email)
@@ -123,12 +122,12 @@ const resendCode = async () => {
   try {
     const result = await sendVerificationCode(form.value.email)
     if (result.success) {
-      emit('success', { message: 'Doğrulama kodu tekrar gönderildi' })
+      emit('success', { message: 'Verification code sent again' })
     } else {
       emit('error', result.error)
     }
   } catch (error) {
-    emit('error', 'Kod gönderilirken hata oluştu')
+    emit('error', 'An error occurred while sending the code')
   } finally {
     isResending.value = false
   }
@@ -144,5 +143,18 @@ watch(form, () => {
 // Email prop'u değiştiğinde form'u güncelle
 watch(() => props.email, (newEmail) => {
   form.value.email = newEmail
+})
+
+// Modal açıldığında otomatik doğrulama kodu gönder
+onMounted(async () => {
+  if (!form.value.email) return
+  isResending.value = true
+  try {
+    await sendVerificationCode(form.value.email)
+  } catch (error) {
+    emit('error', 'An error occurred while sending the code')
+  } finally {
+    isResending.value = false
+  }
 })
 </script> 

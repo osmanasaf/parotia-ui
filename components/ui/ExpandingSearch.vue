@@ -60,6 +60,7 @@
     
     <ExpandingSearchDropdown 
       v-if="showDropdown"
+      @click.stop
     />
   </div>
 </template>

@@ -28,13 +28,14 @@ export const useApi = () => {
       throw error
     }
   }
-  const getHybridRecommendations = async (emotionText, contentType = 'all') => {
+  const getHybridRecommendations = async (emotionText, contentType = 'all', page = 1) => {
     try {
-      return await apiCall('/recommendations/hybrid', {
+      return await apiCall(`/recommendations/hybrid?page=${page}`, {
         method: 'POST',
         body: {
           emotion_text: emotionText,
-          content_type: contentType
+          content_type: contentType,
+          page
         }
       })
     } catch (error) {
@@ -61,9 +62,9 @@ export const useApi = () => {
     }
   }
 
-  const getEmotionRecommendations = async (emotionText, contentType = 'movie', page = 1) => {
+  const getEmotionRecommendations = async (emotionText, contentType = 'all', page = 1) => {
     try {
-      return await apiCall('/recommendations/current-emotion', {
+      return await apiCall(`/recommendations/current-emotion?page=${page}`, {
         method: 'POST',
         body: {
           emotion: emotionText,
@@ -176,7 +177,7 @@ export const useApi = () => {
       })
       
       if (response.access_token && process.client) {
-        localStorage.setItem('parotia_token', response.access_token)
+        localStorage.setItem('movai_token', response.access_token)
       }
       
       return response
@@ -203,7 +204,7 @@ export const useApi = () => {
       return await apiCall('/auth/me')
     } catch (error) {
       if (process.client) {
-        localStorage.removeItem('parotia_token')
+        localStorage.removeItem('movai_token')
       }
       throw error
     }
@@ -349,6 +350,31 @@ export const useApi = () => {
       })
     } catch (error) {
       console.warn('Seçim kaydedilemedi:', error)
+      throw error
+    }
+  }
+
+  // Forgot password
+  const requestPasswordReset = async (email) => {
+    try {
+      return await apiCall('/auth/request-password-reset', {
+        method: 'POST',
+        body: { email }
+      })
+    } catch (error) {
+      console.error('Forgot password failed:', error)
+      throw error
+    }
+  }
+
+  const resetPassword = async (email, code, newPassword) => {
+    try {
+      return await apiCall('/auth/confirm-password-reset', {
+        method: 'POST',
+        body: { email, code, new_password: newPassword }
+      })
+    } catch (error) {
+      console.error('Reset password failed:', error)
       throw error
     }
   }
@@ -534,7 +560,9 @@ export const useApi = () => {
     selectRecommendation,
     getMockRecommendations,
     getMockMovieDetail,
-    getMockWatchProviders
+    getMockWatchProviders,
+    requestPasswordReset,
+    resetPassword
   }
 }
 
@@ -561,7 +589,7 @@ export const useAuth = () => {
 
   const logout = () => {
     if (process.client) {
-      localStorage.removeItem('parotia_token')
+      localStorage.removeItem('movai_token')
     }
     user.value = null
     navigateTo('/')
