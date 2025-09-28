@@ -47,7 +47,8 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@nuxt/image',
-    '@vercel/analytics/nuxt'
+    // Vercel Analytics: yalnızca prod/ci ortamlarında yükle
+    ...(process.env.VERCEL_ANALYTICS === '1' ? ['@vercel/analytics/nuxt'] as const : [])
   ],
 
   components: true,

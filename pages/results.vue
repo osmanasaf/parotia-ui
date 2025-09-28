@@ -24,7 +24,7 @@
       </div>
 
       <div v-if="loading && items.length === 0" class="flex items-center justify-center py-20">
-        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-400"></div>
+        <CinemaSpinner size="lg" label="Yapay zekâ önerilerini hazırlıyor..." />
       </div>
 
       <div v-else>
@@ -114,6 +114,7 @@
 
 <script setup>
 import AppHeader from '~/components/layout/AppHeader.vue'
+import CinemaSpinner from '~/components/ui/CinemaSpinner.vue'
 const { addToWatchlist: apiAddToWatchlist } = useApi()
 
 const route = useRoute()

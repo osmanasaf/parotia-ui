@@ -34,8 +34,7 @@
 
     <div v-if="isLoading" class="flex items-center justify-center min-h-[60vh]">
       <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>
-        <p class="text-white/80">Film detayları yükleniyor...</p>
+        <CinemaSpinner size="lg" label="Film detayları yükleniyor..." />
       </div>
     </div>
 
@@ -419,6 +418,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import CinemaSpinner from '~/components/ui/CinemaSpinner.vue'
 
 const route = useRoute()
 const movieId = route.params.id
