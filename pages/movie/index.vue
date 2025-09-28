@@ -30,7 +30,16 @@ import GenreSection from '~/components/ui/GenreSection.vue'
 const contentStore = useContentStore()
 const { loadPopularMovies, loadGenresWithContent, navigateToContent } = useContent()
 
-const sections = computed(() => contentStore.genreSectionsByType.movie || [])
+const sections = computed(() => {
+  const list = contentStore.genreSectionsByType.movie || []
+  const isRomanceOrDrama = (name) => {
+    const n = String(name || '').toLowerCase()
+    return n.includes('romance') || n.includes('romantik') || n.includes('drama') || n.includes('dram')
+  }
+  const head = list.filter(s => !isRomanceOrDrama(s.name))
+  const tail = list.filter(s => isRomanceOrDrama(s.name))
+  return [...head, ...tail]
+})
 
 const heroItems = computed(() => {
   // Popülerleri backdrop için kullan; eğer yoksa ilk section'dan al

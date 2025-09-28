@@ -46,7 +46,8 @@ export default defineNuxtConfig({
 
   modules: [
     '@pinia/nuxt',
-    '@nuxt/image'
+    '@nuxt/image',
+    '@vercel/analytics/nuxt'
   ],
 
   components: true,
