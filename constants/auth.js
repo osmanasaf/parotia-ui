@@ -25,33 +25,33 @@ export const AUTH_CONSTANTS = {
   
   // Error messages
   ERROR_MESSAGES: {
-    EMAIL_REQUIRED: 'Email is required',
-    EMAIL_INVALID: 'Please enter a valid email address',
-    PASSWORD_REQUIRED: 'Password is required',
-    PASSWORD_TOO_SHORT: 'Password must be at least 8 characters',
-    PASSWORD_WEAK: 'Password must include upper/lowercase letters and numbers',
-    USERNAME_REQUIRED: 'Username is required',
-    USERNAME_TOO_SHORT: 'Username must be at least 3 characters',
-    USERNAME_TOO_LONG: 'Username cannot exceed 30 characters',
-    PASSWORDS_DONT_MATCH: "Passwords don't match",
-    NETWORK_ERROR: 'Network error. Please check your internet connection',
-    INVALID_CREDENTIALS: 'Incorrect email or password',
-    EMAIL_NOT_VERIFIED: 'Please verify your email address first',
-    USER_INACTIVE: 'Your account is not active',
-    EMAIL_ALREADY_EXISTS: 'This email address is already in use'
+    EMAIL_REQUIRED: 'E-posta gereklidir',
+    EMAIL_INVALID: 'Lütfen geçerli bir e-posta adresi girin',
+    PASSWORD_REQUIRED: 'Şifre gereklidir',
+    PASSWORD_TOO_SHORT: 'Şifre en az 8 karakter olmalıdır',
+    PASSWORD_WEAK: 'Şifre büyük/küçük harf ve rakam içermelidir',
+    USERNAME_REQUIRED: 'Kullanıcı adı gereklidir',
+    USERNAME_TOO_SHORT: 'Kullanıcı adı en az 3 karakter olmalıdır',
+    USERNAME_TOO_LONG: 'Kullanıcı adı 30 karakteri aşamaz',
+    PASSWORDS_DONT_MATCH: 'Şifreler eşleşmiyor',
+    NETWORK_ERROR: 'Ağ hatası. Lütfen internet bağlantınızı kontrol edin',
+    INVALID_CREDENTIALS: 'E-posta veya şifre hatalı',
+    EMAIL_NOT_VERIFIED: 'Lütfen önce e-posta adresinizi doğrulayın',
+    USER_INACTIVE: 'Hesabınız aktif değil',
+    EMAIL_ALREADY_EXISTS: 'Bu e-posta adresi zaten kullanımda'
   },
   
   // Success messages
   SUCCESS_MESSAGES: {
-    REGISTER_SUCCESS: 'Your account has been created. A verification code was sent to your email.',
-    LOGIN_SUCCESS: 'Login successful!',
-    LOGOUT_SUCCESS: 'Logged out',
-    EMAIL_VERIFIED: 'Your email has been verified successfully!',
-    VERIFICATION_SENT: 'Verification code has been sent to your email',
-    PROFILE_UPDATED: 'Your profile has been updated',
-    PASSWORD_CHANGED: 'Your password has been changed',
-    EMAIL_CHANGE_REQUESTED: 'Verification code sent to your new email',
-    EMAIL_CHANGED: 'Your email has been updated successfully'
+    REGISTER_SUCCESS: 'Hesabınız oluşturuldu. E-postanıza doğrulama kodu gönderildi.',
+    LOGIN_SUCCESS: 'Giriş başarılı!',
+    LOGOUT_SUCCESS: 'Çıkış yapıldı',
+    EMAIL_VERIFIED: 'E-postanız başarıyla doğrulandı!',
+    VERIFICATION_SENT: 'Doğrulama kodu e-postanıza gönderildi',
+    PROFILE_UPDATED: 'Profiliniz güncellendi',
+    PASSWORD_CHANGED: 'Şifreniz güncellendi',
+    EMAIL_CHANGE_REQUESTED: 'Yeni e-postanıza doğrulama kodu gönderildi',
+    EMAIL_CHANGED: 'E-postanız başarıyla güncellendi'
   }
 }
 
@@ -74,6 +74,6 @@ export const VALIDATION_RULES = {
     minLength: AUTH_CONSTANTS.USERNAME_MIN_LENGTH,
     maxLength: AUTH_CONSTANTS.USERNAME_MAX_LENGTH,
     pattern: /^\w+$/,
-    message: 'Username can only contain letters, numbers, and underscores'
+    message: 'Kullanıcı adı sadece harf, rakam ve alt çizgi içerebilir'
   }
 } 

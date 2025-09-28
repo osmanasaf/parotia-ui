@@ -2,13 +2,13 @@
   <div class="relative overflow-hidden py-24">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h1 class="text-5xl md:text-7xl font-bold font-space text-white mb-8">
-        Find the perfect 
-        <span class="text-gradient">content</span><br/>
-        for your mood
+        Ruh hâline en uygun 
+        <span class="text-gradient">içerik</span><br/>
+        şimdi karşında
       </h1>
       <p class="text-2xl text-white/80 mb-16 max-w-3xl mx-auto font-light">
-        Discover movies and TV shows that match your current emotional state with our 
-        <span class="text-gradient font-semibold">AI-powered</span> recommendation engine
+        <span class="text-gradient font-semibold">Yapay zekâ destekli</span> öneri motorumuz, o anki ruh hâline uyan
+        film ve dizileri saniyeler içinde önerir.
       </p>
       
       <div class="max-w-4xl mx-auto mb-16">

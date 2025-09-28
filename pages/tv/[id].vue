@@ -25,7 +25,7 @@
           </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <NuxtLink to="/" class="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">← Back</NuxtLink>
+              <NuxtLink to="/" class="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">← Geri</NuxtLink>
             </div>
           </div>
         </div>
@@ -35,7 +35,7 @@
     <div v-if="isLoading" class="flex items-center justify-center min-h-[60vh]">
       <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>
-        <p class="text-white/80">TV show details loading...</p>
+        <p class="text-white/80">Dizi detayları yükleniyor...</p>
       </div>
     </div>
 
@@ -64,19 +64,19 @@
             <div class="flex flex-wrap items-center gap-4 text-white/80 mb-6">
               <div class="flex items-center">
                 <span class="text-yellow-400">⭐</span>
-                <span class="ml-1 font-semibold">{{ tvDetail.vote_average?.toFixed(1) || 'N/A' }}</span>
+                <span class="ml-1 font-semibold">{{ tvDetail.vote_average?.toFixed(1) || '—' }}</span>
               </div>
               <span class="text-white/60">•</span>
               <span>{{ tvDetail.first_air_date || '2024' }}</span>
               <span class="text-white/60">•</span>
-              <span>{{ tvDetail.number_of_seasons || '1' }} Season{{ (tvDetail.number_of_seasons || 1) > 1 ? 's' : '' }}</span>
+              <span>{{ tvDetail.number_of_seasons || '1' }} Sezon</span>
               <span class="text-white/60">•</span>
-              <span>{{ tvDetail.number_of_episodes || '10' }} Episodes</span>
+              <span>{{ tvDetail.number_of_episodes || '10' }} Bölüm</span>
             </div>
           </div>
 
           <div v-if="tvDetail.genres?.length">
-            <h3 class="text-lg font-semibold text-white mb-3">Genres</h3>
+            <h3 class="text-lg font-semibold text-white mb-3">Türler</h3>
             <div class="flex flex-wrap gap-2">
               <span 
                 v-for="genre in tvDetail.genres" 
@@ -89,7 +89,7 @@
           </div>
 
           <div v-if="tvDetail.overview">
-            <h3 class="text-lg font-semibold text-white mb-3">Overview</h3>
+            <h3 class="text-lg font-semibold text-white mb-3">Özet</h3>
             <p class="text-white/80 leading-relaxed">
               {{ tvDetail.overview }}
             </p>
@@ -97,7 +97,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div v-if="tvDetail.cast?.length">
-              <h3 class="text-lg font-semibold text-white mb-3">Cast</h3>
+              <h3 class="text-lg font-semibold text-white mb-3">Oyuncular</h3>
               <div class="space-y-1">
                 <p 
                   v-for="actor in tvDetail.cast.slice(0, 5)" 
@@ -110,7 +110,7 @@
             </div>
             
             <div v-if="tvDetail.seasons?.length">
-              <h3 class="text-lg font-semibold text-white mb-3">Seasons</h3>
+              <h3 class="text-lg font-semibold text-white mb-3">Sezonlar</h3>
               <div class="space-y-2">
                 <div 
                   v-for="season in tvDetail.seasons.slice(0, 3)" 
@@ -118,7 +118,7 @@
                   class="bg-white/5 rounded-lg p-3"
                 >
                   <p class="text-white font-medium">{{ season.name }}</p>
-                  <p class="text-white/60 text-sm">{{ season.episode_count }} episodes</p>
+                  <p class="text-white/60 text-sm">{{ season.episode_count }} bölüm</p>
                 </div>
               </div>
             </div>
@@ -328,9 +328,9 @@
       </div>
 
       <div class="mb-12">
-        <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">
-          🎭 Similar TV Shows
-        </h2>
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">
+            🎭 Benzer Diziler
+          </h2>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
           <div 
             v-for="similar in similarShows" 
@@ -356,7 +356,7 @@
                 <h3 class="text-white text-sm font-semibold truncate">{{ similar.name }}</h3>
                 <div class="flex items-center mt-1">
                   <span class="text-yellow-400 text-xs">⭐</span>
-                  <span class="text-white/80 text-xs ml-1">{{ similar.rating?.toFixed(1) || 'N/A' }}</span>
+                  <span class="text-white/80 text-xs ml-1">{{ similar.rating?.toFixed(1) || '—' }}</span>
                 </div>
               </div>
             </div>
@@ -368,13 +368,13 @@
     <div v-else class="flex items-center justify-center min-h-[60vh]">
       <div class="text-center">
         <div class="text-6xl mb-4">😞</div>
-        <h2 class="text-2xl font-bold text-white mb-2">TV Show Not Found</h2>
-        <p class="text-white/70 mb-6">The TV show you're looking for doesn't exist or an error occurred.</p>
+        <h2 class="text-2xl font-bold text-white mb-2">Dizi Bulunamadı</h2>
+        <p class="text-white/70 mb-6">Aradığınız dizi mevcut değil veya bir hata oluştu.</p>
         <NuxtLink 
           to="/" 
           class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-200"
         >
-          Back to Homepage
+          Ana Sayfaya Dön
         </NuxtLink>
       </div>
     </div>
@@ -572,9 +572,9 @@ watch(
 )
 
 useHead({
-  title: computed(() => tvDetail.value ? `${tvDetail.value.name} - movAi` : 'TV Show Details - movAi'),
+  title: computed(() => tvDetail.value ? `${tvDetail.value.name} - movAi` : 'Dizi Detayları - movAi'),
   meta: [
-    { name: 'description', content: computed(() => tvDetail.value?.overview || 'TV show details page') }
+    { name: 'description', content: computed(() => tvDetail.value?.overview || 'Dizi detay sayfası') }
   ]
 })
 </script>

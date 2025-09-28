@@ -78,12 +78,12 @@
         <!-- Forgot Password Panel -->
         <div v-if="activeForm === 'forgot'" class="space-y-4">
           <div class="text-white/80 text-sm">
-            {{ forgotStep === 1 ? 'Enter your email address. We will send a password reset link.' : 'Enter the code from your email and your new password.' }}
+            {{ forgotStep === 1 ? 'E-posta adresini gir. Şifre sıfırlama bağlantısı göndereceğiz.' : 'E-postana gelen kodu ve yeni şifreni gir.' }}
           </div>
           <input
             v-model="forgotEmail"
             type="email"
-            placeholder="Email address"
+            placeholder="E-posta adresi"
             class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             :disabled="forgotStep !== 1"
           />
@@ -91,20 +91,20 @@
             <input
               v-model="forgotCode"
               type="text"
-              placeholder="Verification code"
+              placeholder="Doğrulama kodu"
               class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <input
               v-model="forgotNewPassword"
               type="password"
-              placeholder="New password"
+              placeholder="Yeni şifre"
               class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div v-if="forgotError" class="text-red-300 text-sm">{{ forgotError }}</div>
-          <div v-if="forgotSent && forgotStep === 1" class="text-green-300 text-sm">Link sent. Check your email.</div>
+          <div v-if="forgotSent && forgotStep === 1" class="text-green-300 text-sm">Bağlantı gönderildi. E-postanı kontrol et.</div>
           <div class="flex gap-2 justify-end">
-            <button class="px-3 py-2 rounded-md text-white bg-white/10 hover:bg-white/20" @click="showLogin" :disabled="forgotLoading">Back</button>
+            <button class="px-3 py-2 rounded-md text-white bg-white/10 hover:bg-white/20" @click="showLogin" :disabled="forgotLoading">Geri</button>
             <button
               v-if="forgotStep === 1"
               class="px-3 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
@@ -112,7 +112,7 @@
               :disabled="!forgotEmail || forgotLoading"
             >
               <span v-if="forgotLoading" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin align-middle mr-2"></span>
-              Send Link
+              Bağlantıyı Gönder
             </button>
             <button
               v-else
@@ -121,7 +121,7 @@
               :disabled="!forgotEmail || !forgotCode || !forgotNewPassword || forgotLoading"
             >
               <span v-if="forgotLoading" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin align-middle mr-2"></span>
-              Reset Password
+              Şifreyi Sıfırla
             </button>
           </div>
         </div>
@@ -149,30 +149,30 @@ const successMessage = ref('')
 const modalTitle = computed(() => {
   switch (activeForm.value) {
     case 'login':
-      return 'Sign In'
+      return 'Giriş Yap'
     case 'register':
-      return 'Create Account'
+      return 'Hesap Oluştur'
     case 'verification':
-      return 'Email Verification'
+      return 'E-posta Doğrulama'
     case 'forgot':
-      return 'Reset Password'
+      return 'Şifre Sıfırlama'
     default:
-      return 'Sign In'
+      return 'Giriş Yap'
   }
 })
 
 const modalSubtitle = computed(() => {
   switch (activeForm.value) {
     case 'login':
-      return 'Sign in to your account'
+      return 'Hesabına giriş yap'
     case 'register':
-      return 'Create a new account'
+      return 'Yeni bir hesap oluştur'
     case 'verification':
-      return 'Verify your email address'
+      return 'E-posta adresini doğrula'
     case 'forgot':
-      return 'We will send a reset link/code to your email'
+      return 'E-postana bir sıfırlama bağlantısı/kodu göndereceğiz'
     default:
-      return 'Sign in to your account'
+      return 'Hesabına giriş yap'
   }
 })
 
@@ -221,7 +221,7 @@ const handleRegisterSuccess = (user) => {
 }
 
 const handleVerificationSuccess = (result) => {
-  successMessage.value = result.message || 'Your email has been verified successfully!'
+  successMessage.value = result.message || 'E-postan başarıyla doğrulandı!'
   setTimeout(() => {
     successMessage.value = ''
     if (result.email) {

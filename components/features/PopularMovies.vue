@@ -2,10 +2,10 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
     <div class="mb-8">
       <h2 class="text-4xl md:text-5xl font-bold font-space text-white mb-4">
-        🎬 Popular <span class="text-gradient">Movies</span>
+        🎬 Popüler <span class="text-gradient">Filmler</span>
       </h2>
       <p class="text-xl text-white/70">
-        Trending films that captivate audiences worldwide
+        Dünyada ilgi gören ve beğenilen yapımlar
       </p>
     </div>
 

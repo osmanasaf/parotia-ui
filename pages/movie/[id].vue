@@ -25,7 +25,7 @@
           </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <NuxtLink to="/" class="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">← Back</NuxtLink>
+              <NuxtLink to="/" class="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">← Geri</NuxtLink>
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
             <div class="flex flex-wrap items-center gap-4 text-white/80 mb-6">
               <div class="flex items-center">
                 <span class="text-yellow-400">⭐</span>
-                <span class="ml-1 font-semibold">{{ movieDetail.vote_average?.toFixed(1) || 'N/A' }}</span>
+                <span class="ml-1 font-semibold">{{ movieDetail.vote_average?.toFixed(1) || '—' }}</span>
               </div>
               <span class="text-white/60">•</span>
               <span>{{ movieDetail.release_date || '2024' }}</span>
@@ -595,7 +595,7 @@ watch(
   { immediate: true }
 )
 useHead({
-  title: computed(() => movieDetail.value ? `${movieDetail.value.title} - movAi` : 'Movie Details - movAi'),
+  title: computed(() => movieDetail.value ? `${movieDetail.value.title} - movAi` : 'Film Detayları - movAi'),
   meta: [
     { name: 'description', content: computed(() => movieDetail.value?.overview || 'Film detay sayfası') }
   ]

@@ -8,8 +8,6 @@
     
     <PopularTVShows />
     
-    <Recommendations :emotion-input="emotionInput" />
-    
     <LoginModal />
   </div>
 </template>
@@ -20,10 +18,7 @@ import AppHeader from '~/components/layout/AppHeader.vue'
 import EmotionSearch from '~/components/features/EmotionSearch.vue'
 import PopularMovies from '~/components/features/PopularMovies.vue'
 import PopularTVShows from '~/components/features/PopularTVShows.vue'
-import Recommendations from '~/components/features/Recommendations.vue'
 import LoginModal from '~/components/ui/LoginModal.vue'
-
-const emotionInput = ref('')
 
 // Import composables
 const { loadPopularMovies, loadPopularTVShows } = useContent()

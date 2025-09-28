@@ -2,8 +2,8 @@
   <div v-if="isLoginModalOpen" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" @click="closeModal">
     <div class="glass-effect rounded-2xl p-8 max-w-md w-full mx-4" @click.stop>
       <div class="text-center mb-6">
-        <h3 class="text-3xl font-bold font-space text-gradient mb-2">Welcome to movAi</h3>
-        <p class="text-white/70">Sign in to get personalized recommendations</p>
+        <h3 class="text-3xl font-bold font-space text-gradient mb-2">movAi’ye Hoş Geldin</h3>
+        <p class="text-white/70">Kişiselleştirilmiş öneriler için giriş yap</p>
       </div>
       
       <div class="space-y-4">
@@ -11,7 +11,7 @@
           <input 
             v-model="loginForm.email"
             type="email" 
-            placeholder="Email address"
+            placeholder="E-posta adresi"
             class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
         </div>
@@ -19,12 +19,12 @@
           <input 
             v-model="loginForm.password"
             type="password" 
-            placeholder="Password"
+            placeholder="Şifre"
             class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
         </div>
         <div class="flex justify-end -mt-2">
-          <button @click="openForgot" class="text-blue-400 hover:text-blue-300 text-sm">Forgot your password?</button>
+          <button @click="openForgot" class="text-blue-400 hover:text-blue-300 text-sm">Şifreni mi unuttun?</button>
         </div>
         
         <button 
@@ -35,7 +35,7 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
           </svg>
-          Sign In
+          Giriş Yap
         </button>
         
         <div class="text-center">
@@ -43,19 +43,19 @@
             @click="showRegisterForm = true"
             class="text-blue-400 hover:text-blue-300 transition-colors"
           >
-            Don't have an account? Sign up
+            Hesabın yok mu? Kayıt ol
           </button>
         </div>
 
         <!-- Forgot Password Panel -->
         <div v-if="showForgot" class="border-t border-white/20 pt-4 mt-2">
-          <h4 class="text-lg font-semibold text-white mb-3">Password Reset</h4>
-          <p class="text-white/70 text-sm mb-3">Enter the email linked to your account. We will send a reset link.</p>
+          <h4 class="text-lg font-semibold text-white mb-3">Şifre Sıfırlama</h4>
+          <p class="text-white/70 text-sm mb-3">Hesabına bağlı e‑posta adresini gir. Sıfırlama bağlantısı göndereceğiz.</p>
           <div class="space-y-3">
             <input 
               v-model="forgotEmail"
               type="email" 
-              placeholder="Email address"
+              placeholder="E-posta adresi"
               class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
             <div v-if="forgotError" class="text-red-300 text-sm">{{ forgotError }}</div>
@@ -65,14 +65,14 @@
                 class="px-3 py-2 rounded-md text-white bg-white/10 hover:bg-white/20"
                 @click="closeForgot"
                 :disabled="forgotLoading"
-              >Cancel</button>
+              >Vazgeç</button>
               <button 
                 class="px-3 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
                 @click="handleForgotSubmit"
                 :disabled="!forgotEmail || forgotLoading"
               >
                 <span v-if="forgotLoading" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin align-middle mr-2"></span>
-                Send Link
+                Bağlantı Gönder
               </button>
             </div>
           </div>
@@ -80,24 +80,24 @@
 
         <!-- Register Form -->
         <div v-if="isRegisterFormVisible" class="border-t border-white/20 pt-4 mt-4">
-          <h4 class="text-lg font-semibold text-white mb-3">Create Account</h4>
+          <h4 class="text-lg font-semibold text-white mb-3">Hesap Oluştur</h4>
           <div class="space-y-3">
             <input 
               v-model="registerForm.username"
               type="text" 
-              placeholder="Username"
+              placeholder="Kullanıcı adı"
               class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
             <input 
               v-model="registerForm.email"
               type="email" 
-              placeholder="Email address"
+              placeholder="E-posta adresi"
               class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
             <input 
               v-model="registerForm.password"
               type="password" 
-              placeholder="Password"
+              placeholder="Şifre"
               class="w-full px-4 py-3 glass-effect border-0 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
             
@@ -106,7 +106,7 @@
               :disabled="!registerForm.email || !registerForm.password || !registerForm.username"
               class="w-full btn-outline text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Create Account
+              Hesap Oluştur
             </button>
           </div>
         </div>

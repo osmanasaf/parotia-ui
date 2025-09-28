@@ -2,33 +2,33 @@
   <div class="min-h-screen gradient-dark">
     <AppHeader />
     <div class="max-w-3xl mx-auto px-4 py-8">
-      <h2 class="text-2xl font-semibold text-white mb-6">Account Settings</h2>
+      <h2 class="text-2xl font-semibold text-white mb-6">Hesap Ayarları</h2>
 
       <div class="space-y-8">
         <!-- Profile Information -->
         <form @submit.prevent="submitProfile" class="card-modern p-6 space-y-4">
-          <h3 class="text-white font-semibold text-lg">Profile</h3>
+          <h3 class="text-white font-semibold text-lg">Profil</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <AuthInput id="settings-first-name" v-model="profile.first_name" label="First name" type="text" placeholder="First name" />
-            <AuthInput id="settings-last-name" v-model="profile.last_name" label="Last name" type="text" placeholder="Last name" />
+            <AuthInput id="settings-first-name" v-model="profile.first_name" label="Ad" type="text" placeholder="Ad" />
+            <AuthInput id="settings-last-name" v-model="profile.last_name" label="Soyad" type="text" placeholder="Soyad" />
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <AuthInput id="settings-username" v-model="profile.username" label="Username" type="text" placeholder="username" :disabled="true" />
+            <AuthInput id="settings-username" v-model="profile.username" label="Kullanıcı adı" type="text" placeholder="kullanıcı adı" :disabled="true" />
             <div class="flex flex-col gap-2">
               <div class="relative">
                 <AuthInput
                   id="settings-email"
                   v-model="profile.email"
-                  label="Email"
+                  label="E-posta"
                   type="email"
-                  placeholder="email@example.com"
+                  placeholder="email@ornek.com"
                   :disabled="!isEmailEditing"
                 />
                 <button
                   type="button"
                   class="absolute right-3 top-9 h-7 w-7 rounded bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors flex items-center justify-center"
                   @click="toggleEmailEdit"
-                  :title="isEmailEditing ? 'Cancel editing' : 'Edit email'"
+                  :title="isEmailEditing ? 'Düzenlemeyi iptal et' : 'E-postayı düzenle'"
                 >
                   <svg v-if="!isEmailEditing" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 20h4.586a1 1 0 00.707-.293l9.414-9.414a2 2 0 000-2.828l-2.172-2.172a2 2 0 00-2.828 0L4.293 14.707A1 1 0 004 15.414V20z" />
@@ -42,7 +42,7 @@
                   type="button"
                   class="absolute right-12 top-9 h-7 w-7 rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors flex items-center justify-center"
                   @click="submitEmailChange"
-                  title="Confirm"
+                  title="Onayla"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414L8.5 11.086l6.543-6.543a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -50,16 +50,16 @@
                 </button>
               </div>
               <div v-if="awaitingEmailCode" class="flex items-end gap-2">
-                <AuthInput id="settings-email-code" v-model="emailCode" label="Verification Code" type="text" placeholder="123456" />
-                <AuthButton type="button" :loading="isLoading" @click="confirmEmailChangeAction">Verify</AuthButton>
-                <AuthButton type="button" :loading="isLoading" @click="resendEmailCode" variant="outline">Resend</AuthButton>
-                <AuthButton type="button" variant="outline" @click="cancelEmailEdit">Cancel</AuthButton>
+                <AuthInput id="settings-email-code" v-model="emailCode" label="Doğrulama Kodu" type="text" placeholder="123456" />
+                <AuthButton type="button" :loading="isLoading" @click="confirmEmailChangeAction">Doğrula</AuthButton>
+                <AuthButton type="button" :loading="isLoading" @click="resendEmailCode" variant="outline">Tekrar Gönder</AuthButton>
+                <AuthButton type="button" variant="outline" @click="cancelEmailEdit">İptal</AuthButton>
               </div>
               <p v-if="emailInfoMessage" class="text-yellow-300 text-sm">{{ emailInfoMessage }}</p>
             </div>
           </div>
           <div class="flex gap-3">
-            <AuthButton type="submit" :loading="isLoading" :disabled="!canSubmitProfile">Update</AuthButton>
+            <AuthButton type="submit" :loading="isLoading" :disabled="!canSubmitProfile">Güncelle</AuthButton>
             <p v-if="saveMessage" class="text-green-400 self-center">{{ saveMessage }}</p>
             <p v-if="error" class="text-red-400 self-center">{{ error }}</p>
           </div>
@@ -68,13 +68,13 @@
 
         <!-- Change Password -->
         <form @submit.prevent="submitPassword" class="card-modern p-6 space-y-4">
-          <h3 class="text-white font-semibold text-lg">Password</h3>
+          <h3 class="text-white font-semibold text-lg">Şifre</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <AuthInput id="settings-current-password" v-model="passwordForm.current_password" label="Current password" type="password" placeholder="********" />
-            <AuthInput id="settings-new-password" v-model="passwordForm.new_password" label="New password" type="password" placeholder="********" />
+            <AuthInput id="settings-current-password" v-model="passwordForm.current_password" label="Mevcut şifre" type="password" placeholder="********" />
+            <AuthInput id="settings-new-password" v-model="passwordForm.new_password" label="Yeni şifre" type="password" placeholder="********" />
           </div>
           <div class="flex gap-3">
-            <AuthButton type="submit" :loading="isLoading" :disabled="!canSubmitPassword">Update Password</AuthButton>
+            <AuthButton type="submit" :loading="isLoading" :disabled="!canSubmitPassword">Şifreyi Güncelle</AuthButton>
             <p v-if="passwordMessage" class="text-green-400 self-center">{{ passwordMessage }}</p>
           </div>
         </form>
