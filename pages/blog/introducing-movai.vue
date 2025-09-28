@@ -2,19 +2,19 @@
   <div class="min-h-screen gradient-dark">
     <AppHeader />
     <article class="max-w-3xl mx-auto px-4 py-10 prose prose-invert">
-      <h1>Introducing movAi: Emotion-based Recommendations</h1>
-      <p class="lead">How movAi personalizes your experience based on your mood.</p>
+      <h1>movAi Tanıtımı: Duygu Bazlı Öneriler</h1>
+      <p class="lead">movAi ruh halinize göre deneyiminizi nasıl kişiselleştiriyor?</p>
       <p>
-        movAi brings a fresh approach to movie and TV discovery. Share your mood, and we blend
-        emotional cues with your watching habits to surface content you will love.
+        movAi, film ve dizi keşfine yeni bir yaklaşım getiriyor. Ruh halinizi paylaşın; duygu ipuçlarını
+        izleme alışkanlıklarınızla harmanlayarak seveceğiniz içerikleri öne çıkaralım.
       </p>
-      <h2>Why emotions?</h2>
+      <h2>Neden duygular?</h2>
       <p>
-        Emotions guide our choices. By factoring mood into the recommendation pipeline, movAi can
-        suggest titles that better match how you feel right now.
+        Duygular seçimlerimizi yönlendirir. Öneri sürecine ruh halinizi dahil ederek movAi, o anki
+        hissinize daha uygun içerikler önerebilir.
       </p>
-      <h2>What’s next</h2>
-      <p>We will keep iterating with your feedback. Enjoy exploring!</p>
+      <h2>Sırada ne var?</h2>
+      <p>Geri bildirimlerinizle geliştirmeye devam edeceğiz. Keyifli keşifler!</p>
     </article>
   </div>
 </template>
@@ -22,9 +22,9 @@
 <script setup>
 import AppHeader from '~/components/layout/AppHeader.vue'
 useHead({ 
-  title: 'Introducing movAi',
+  title: 'movAi Tanıtımı',
   meta: [
-    { name: 'description', content: 'Introducing movAi: a fresh way to discover movies and TV shows by mood.' }
+    { name: 'description', content: 'movAi ile ruh halinize göre film ve dizi keşfetmenin yeni yolu.' }
   ]
 })
 </script>

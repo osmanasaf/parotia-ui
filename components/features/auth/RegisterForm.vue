@@ -4,18 +4,18 @@
       <AuthInput
         id="register-first-name"
         v-model="form.first_name"
-        label="First name"
+        label="Ad"
         type="text"
-        placeholder="First name (optional)"
+        placeholder="Ad (opsiyonel)"
         :error="errors.first_name"
         @keyup-enter="handleSubmit"
       />
       <AuthInput
         id="register-last-name"
         v-model="form.last_name"
-        label="Last name"
+        label="Soyad"
         type="text"
-        placeholder="Last name (optional)"
+        placeholder="Soyad (opsiyonel)"
         :error="errors.last_name"
         @keyup-enter="handleSubmit"
       />
@@ -23,19 +23,19 @@
     <AuthInput
       id="register-username"
       v-model="form.username"
-      label="Username"
+      label="Kullanıcı adı"
       type="text"
       placeholder="kullanici_adi"
       required
       :error="errors.username"
-      hint="Only letters, numbers and underscore are allowed"
+      hint="Sadece harf, rakam ve alt çizgi kullanılabilir"
       @keyup-enter="handleSubmit"
     />
 
     <AuthInput
       id="register-email"
       v-model="form.email"
-      label="Email"
+      label="E-posta"
       type="email"
       placeholder="ornek@email.com"
       required
@@ -46,21 +46,21 @@
     <AuthInput
       id="register-password"
       v-model="form.password"
-      label="Password"
+      label="Şifre"
       type="password"
-      placeholder="Create a strong password"
+      placeholder="Güçlü bir şifre oluşturun"
       required
       :error="errors.password"
-      hint="At least 8 characters, include upper/lowercase and numbers"
+      hint="En az 8 karakter; büyük/küçük harf ve rakam içermeli"
       @keyup-enter="handleSubmit"
     />
 
     <AuthInput
       id="register-confirm-password"
       v-model="form.confirmPassword"
-      label="Confirm password"
+      label="Şifreyi doğrula"
       type="password"
-      placeholder="Re-enter your password"
+      placeholder="Şifrenizi tekrar girin"
       required
       :error="errors.confirmPassword"
       @keyup-enter="handleSubmit"
@@ -75,8 +75,8 @@
         class="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
       />
       <label class="ml-2 text-sm text-white/70" for="accept-terms">
-        I accept the <a href="/terms" class="text-blue-400 hover:text-blue-300">Terms of Service</a>
-        and <a href="/privacy" class="text-blue-400 hover:text-blue-300">Privacy Policy</a>
+        <a href="/terms-of-service" class="text-blue-400 hover:text-blue-300">Hizmet Koşulları</a> ve
+        <a href="/privacy-policy" class="text-blue-400 hover:text-blue-300">Gizlilik Politikası</a>'nı kabul ediyorum
       </label>
     </div>
 
@@ -84,20 +84,20 @@
       type="submit"
       :loading="isLoading"
       :disabled="!isFormValid"
-      loading-text="Creating account..."
+      loading-text="Hesap oluşturuluyor..."
     >
-      Create Account
+      Hesap Oluştur
     </AuthButton>
 
     <div class="text-center">
-      <p class="text-white/70" id="login-link-desc">Already have an account?</p>
+      <p class="text-white/70" id="login-link-desc">Zaten bir hesabınız var mı?</p>
       <button
         type="button"
         class="text-blue-400 hover:text-blue-300 transition-colors font-medium"
         @click="$emit('showLogin')"
         aria-describedby="login-link-desc"
       >
-        Sign in
+        Giriş yap
       </button>
     </div>
   </form>

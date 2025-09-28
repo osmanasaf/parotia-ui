@@ -24,7 +24,7 @@
         <div class="flex items-center justify-between mt-1">
           <div class="flex items-center">
             <span class="text-yellow-400 text-xs">⭐</span>
-            <span class="text-white/80 text-xs ml-1">{{ movie.rating?.toFixed(1) || 'N/A' }}</span>
+            <span class="text-white/80 text-xs ml-1">{{ movie.rating?.toFixed(1) || '—' }}</span>
           </div>
           <div class="flex items-center gap-2" v-if="isLoggedIn">
             <div class="relative">
@@ -32,7 +32,7 @@
                 @click.stop="quickAdd()"
                 :disabled="isSaving"
                 class="rounded-full p-1 transition-all bg-blue-600/80 hover:bg-blue-600 disabled:opacity-70 disabled:cursor-not-allowed"
-                :title="isInWatchlist ? 'Added' : 'Add to Watchlist'"
+                :title="isInWatchlist ? 'Eklendi' : 'İzleme listesine ekle'"
               >
                 <span v-if="isSaving" class="block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
                 <svg v-else-if="!isInWatchlist" class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,7 +42,7 @@
                   <path d="M5 13l4 4L19 7" />
                 </svg>
               </button>
-              <span v-if="showAdded" class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] px-2 py-0.5 rounded bg-black/80 text-white whitespace-nowrap">Added</span>
+              <span v-if="showAdded" class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] px-2 py-0.5 rounded bg-black/80 text-white whitespace-nowrap">Eklendi</span>
               <span v-if="showPing" class="absolute inset-0 rounded-full bg-blue-400/60 animate-ping"></span>
             </div>
             <div class="relative" ref="menuRoot">
@@ -51,8 +51,8 @@
               </button>
               <div v-if="menuOpen" @click.stop class="absolute bottom-full right-0 mb-2 w-40 bg-black/90 text-white rounded-md shadow-xl ring-1 ring-white/10 z-20">
                 <!-- Rate kaldırıldı -->
-                <button @click="addWithStatus('watched')" class="block w-full text-left px-3 py-2 hover:bg-white/10">Mark as watched</button>
-                <button v-if="isInWatchlist" @click="addWithStatus('remove')" class="block w-full text-left px-3 py-2 text-red-300 hover:bg-white/10">Remove</button>
+                <button @click="addWithStatus('watched')" class="block w-full text-left px-3 py-2 hover:bg-white/10">İzlendi olarak işaretle</button>
+                <button v-if="isInWatchlist" @click="addWithStatus('remove')" class="block w-full text-left px-3 py-2 text-red-300 hover:bg-white/10">Kaldır</button>
               </div>
             </div>
           </div>

@@ -2,15 +2,15 @@
   <div class="min-h-screen gradient-dark">
     <AppHeader />
     <article class="max-w-3xl mx-auto px-4 py-10 prose prose-invert">
-      <h1>How Our Recommendations Work</h1>
-      <p>We combine two key signals to recommend content:</p>
+      <h1>Önerilerimiz Nasıl Çalışır?</h1>
+      <p>İçerik önermek için iki ana sinyali birleştiriyoruz:</p>
       <ol>
-        <li><strong>Emotion-based input</strong>: your current mood and intent</li>
-        <li><strong>History-based patterns</strong>: your preferences and similar users</li>
+        <li><strong>Duygu temelli giriş</strong>: mevcut ruh hâliniz ve niyetiniz</li>
+        <li><strong>Geçmişe dayalı örüntüler</strong>: tercihlerinizi ve benzer kullanıcıları dikkate alma</li>
       </ol>
       <p>
-        This hybrid approach gives balanced, relevant suggestions. We continue improving the
-        ranking model as we gather feedback.
+        Bu hibrit yaklaşım, dengeli ve ilgili öneriler sunar. Geri bildirimlerle sıralama modelini
+        sürekli iyileştiriyoruz.
       </p>
     </article>
   </div>
@@ -19,9 +19,9 @@
 <script setup>
 import AppHeader from '~/components/layout/AppHeader.vue'
 useHead({ 
-  title: 'How Our Recommendations Work',
+  title: 'Önerilerimiz Nasıl Çalışır?',
   meta: [
-    { name: 'description', content: 'A quick overview of movAi’s hybrid ranking approach.' }
+    { name: 'description', content: 'movAi’nin hibrit sıralama yaklaşımına kısa bir genel bakış.' }
   ]
 })
 </script>

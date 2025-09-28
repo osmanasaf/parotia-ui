@@ -2,40 +2,40 @@
   <div class="min-h-screen gradient-dark">
     <AppHeader />
     <main class="max-w-3xl mx-auto px-4 py-10 prose prose-invert">
-      <h1>Privacy Policy</h1>
-      <p>Last updated: {{ lastUpdated }}</p>
+      <h1>Gizlilik Politikası</h1>
+      <p>Son güncelleme: {{ lastUpdated }}</p>
 
       <p>
-        We value your privacy. This policy explains what information we collect, how we use it,
-        and your rights regarding your data.
+        Gizliliğinize önem veriyoruz. Bu politika hangi verileri topladığımızı, nasıl kullandığımızı
+        ve verilerinizle ilgili haklarınızı açıklar.
       </p>
 
-      <h2>Information We Collect</h2>
+      <h2>Topladığımız Bilgiler</h2>
       <ul>
-        <li>Account data: email, username, basic profile details</li>
-        <li>Usage data: pages visited, interactions with recommendations</li>
-        <li>Technical data: device, browser, and approximate location</li>
+        <li>Hesap verileri: e‑posta, kullanıcı adı, temel profil bilgileri</li>
+        <li>Kullanım verileri: ziyaret edilen sayfalar, önerilerle etkileşimler</li>
+        <li>Teknik veriler: cihaz, tarayıcı ve yaklaşık konum</li>
       </ul>
 
-      <h2>How We Use Your Information</h2>
+      <h2>Bilgilerinizi Nasıl Kullanıyoruz</h2>
       <ul>
-        <li>Provide personalized movie/TV recommendations</li>
-        <li>Improve our services and user experience</li>
-        <li>Maintain security and prevent abuse</li>
+        <li>Kişiselleştirilmiş film/dizi önerileri sunmak</li>
+        <li>Hizmetlerimizi ve kullanıcı deneyimini geliştirmek</li>
+        <li>Güvenliği sağlamak ve kötüye kullanımı önlemek</li>
       </ul>
 
-      <h2>Data Retention</h2>
-      <p>We keep data only as long as necessary for the purposes above or as required by law.</p>
+      <h2>Veri Saklama</h2>
+      <p>Verileri yalnızca yukarıdaki amaçlar için gerekli olduğu veya kanunen gerektiği sürece saklarız.</p>
 
-      <h2>Your Rights</h2>
+      <h2>Haklarınız</h2>
       <ul>
-        <li>Access, update, or delete your data</li>
-        <li>Export your data</li>
-        <li>Withdraw consent where applicable</li>
+        <li>Verilerinize erişme, güncelleme veya silme</li>
+        <li>Verilerinizi dışa aktarma</li>
+        <li>Uygulanabildiğinde onayı geri çekme</li>
       </ul>
 
-      <h2>Contact</h2>
-      <p>If you have questions about this policy, contact us via the help section.</p>
+      <h2>İletişim</h2>
+      <p>Bu politika ile ilgili sorularınız için yardım bölümünden bize ulaşabilirsiniz.</p>
     </main>
   </div>
 </template>
@@ -44,9 +44,9 @@
 import AppHeader from '~/components/layout/AppHeader.vue'
 const lastUpdated = new Date().toISOString().slice(0, 10)
 useHead({ 
-  title: 'Privacy Policy',
+  title: 'Gizlilik Politikası',
   meta: [
-    { name: 'description', content: 'movAi privacy policy: what we collect, how we use it, and your rights.' }
+    { name: 'description', content: 'movAi gizlilik politikası: topladığımız veriler, kullanım amaçlarımız ve haklarınız.' }
   ]
 })
 </script>

@@ -2,7 +2,7 @@
   <div class="expanding-search-dropdown" @click.stop>
     <!-- Header with Country Selector -->
     <div class="search-dropdown-header">
-      <div class="search-dropdown-title">SEARCH SETTINGS</div>
+      <div class="search-dropdown-title">ARAMA AYARLARI</div>
       <div class="country-selector-container">
         <div class="country-selector-modern" @click="toggleCountryDropdown">
           <div class="country-flag">{{ getCountryFlag(selectedCountry) }}</div>
@@ -16,7 +16,7 @@
         <!-- Country Dropdown -->
         <div v-if="showCountryDropdown" class="country-dropdown">
           <div class="country-dropdown-header">
-            <div class="country-dropdown-title">Select Country</div>
+            <div class="country-dropdown-title">Ülke Seçin</div>
             <button @click="toggleCountryDropdown" class="close-country-btn">✕</button>
           </div>
           <div class="country-list">
@@ -42,8 +42,8 @@
     <!-- Recent Searches -->
     <div v-if="!searchQuery && recentSearches.length > 0" class="recent-searches-section">
       <div class="recent-searches-title">
-        Recently searched
-        <button @click="clearRecentSearches" class="clear-recent-btn">Clear all</button>
+        Son aramalar
+        <button @click="clearRecentSearches" class="clear-recent-btn">Tümünü temizle</button>
       </div>
       <div class="recent-searches-grid">
         <div 
@@ -92,7 +92,7 @@
            v-if="selectedResultId === result.tmdb_id && !providersLoading && selectedProviders.length > 0"
            class="providers-inline"
          >
-           <div class="providers-inline-title">Available on</div>
+           <div class="providers-inline-title">Şurada mevcut</div>
            <div class="providers-inline-grid">
              <div 
                v-for="provider in selectedProviders" 
@@ -120,14 +120,14 @@
            v-if="selectedResultId === result.tmdb_id && providersLoading"
            class="providers-inline providers-loading"
          >
-           <div class="spinner" aria-label="Loading" />
+           <div class="spinner" aria-label="Yükleniyor" />
          </div>
          <!-- Providers empty state -->
          <div
            v-if="selectedResultId === result.tmdb_id && !providersLoading && selectedProviders.length === 0"
            class="providers-inline providers-empty"
          >
-           <div class="providers-inline-title">⚠️ Not available in this country</div>
+           <div class="providers-inline-title">⚠️ Bu ülkede mevcut değil</div>
          </div>
        </div>
      </div>
@@ -138,8 +138,8 @@
    <!-- Empty State - sadece arama yapıldıktan sonra göster -->
    <div v-if="searchQuery && searchResults.length === 0 && hasSearched" class="empty-dropdown-state">
      <div class="empty-dropdown-icon">🔍</div>
-     <div class="empty-dropdown-text">No results found</div>
-     <div class="empty-dropdown-subtext">Try searching for a different title</div>
+     <div class="empty-dropdown-text">Sonuç bulunamadı</div>
+     <div class="empty-dropdown-subtext">Farklı bir başlık aramayı deneyin</div>
    </div>
 </template>
 

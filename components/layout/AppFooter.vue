@@ -3,15 +3,15 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="py-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-2 text-white/70 text-sm">
-          <NuxtLink to="/privacy-policy" class="hover:text-white transition-colors">Privacy Policy</NuxtLink>
+          <NuxtLink to="/privacy-policy" class="hover:text-white transition-colors">Gizlilik Politikası</NuxtLink>
           <span class="text-white/30">|</span>
-          <NuxtLink to="/terms-of-service" class="hover:text-white transition-colors">Terms of Service</NuxtLink>
+          <NuxtLink to="/terms-of-service" class="hover:text-white transition-colors">Hizmet Koşulları</NuxtLink>
           <span class="text-white/30">|</span>
           <NuxtLink to="/blog" class="hover:text-white transition-colors">Blog</NuxtLink>
         </div>
 
         <div class="text-white/60 text-sm text-center">
-          Non-profit side project | movAi
+          Kâr amacı gütmeyen bir projedir | movAi
         </div>
 
         <div class="flex items-center gap-2">

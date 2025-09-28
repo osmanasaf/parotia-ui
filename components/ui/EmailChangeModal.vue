@@ -3,19 +3,19 @@
     <div class="absolute inset-0 bg-black/70"></div>
     <div class="relative w-full max-w-md bg-gray-900/95 border border-white/20 rounded-2xl p-6">
       <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-white">Verify New Email</h3>
+        <h3 class="text-lg font-semibold text-white">Yeni E-postayı Doğrula</h3>
         <button class="text-white/70 hover:text-white" @click="onClose" aria-label="Close">
           <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
 
       <div class="space-y-4">
-        <p class="text-white/70 text-sm">Enter the 6-digit code sent to <span class="text-white font-medium">{{ newEmail }}</span>.</p>
-        <AuthInput id="email-change-code" v-model="code" label="Verification Code" placeholder="123456" :maxlength="6" inputmode="numeric" @input="onCodeInput" />
+        <p class="text-white/70 text-sm"><span class="text-white font-medium">{{ newEmail }}</span> adresine gönderilen 6 haneli kodu girin.</p>
+        <AuthInput id="email-change-code" v-model="code" label="Doğrulama Kodu" placeholder="123456" :maxlength="6" inputmode="numeric" @input="onCodeInput" />
         <div class="flex gap-2">
-          <AuthButton :loading="loading" @click="verify">Verify</AuthButton>
-          <AuthButton variant="secondary" :loading="resending" @click="resend">Resend</AuthButton>
-          <AuthButton variant="secondary" @click="onClose">Cancel</AuthButton>
+          <AuthButton :loading="loading" @click="verify">Doğrula</AuthButton>
+          <AuthButton variant="secondary" :loading="resending" @click="resend">Tekrar Gönder</AuthButton>
+          <AuthButton variant="secondary" @click="onClose">Vazgeç</AuthButton>
         </div>
         <p v-if="message" :class="messageClass">{{ message }}</p>
       </div>

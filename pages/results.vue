@@ -5,12 +5,12 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
         <div>
-          <p class="text-sm uppercase tracking-wider text-white/60 mb-1">Your suggestion with AI</p>
+          <p class="text-sm uppercase tracking-wider text-white/60 mb-1">Yapay zekâ ile öneriler</p>
           <h1 class="text-3xl md:text-5xl font-extrabold text-white">
-            Tailored picks for you
-            <span class="text-gradient">today</span>
+            Sizin için seçtiklerimiz
+            <span class="text-gradient">bugün</span>
           </h1>
-          <p class="text-white/70 mt-2">Mood: <span class="text-white font-semibold">{{ queryText }}</span></p>
+          <p class="text-white/70 mt-2">Ruh hâli: <span class="text-white font-semibold">{{ queryText }}</span></p>
         </div>
         <div v-if="isLoggedIn" class="flex flex-wrap items-center gap-2">
           <button 
@@ -28,7 +28,7 @@
       </div>
 
       <div v-else>
-        <div v-if="topItems.length === 0" class="text-center text-white/70 py-20">No results found</div>
+        <div v-if="topItems.length === 0" class="text-center text-white/70 py-20">Sonuç bulunamadı</div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div 
             v-for="it in items" 
@@ -61,7 +61,7 @@
                 <div class="mt-2 flex items-center justify-between gap-3">
                   <div v-if="it.score != null" class="flex-1">
                     <div class="flex items-center justify-between text-[11px] text-white/80">
-                      <span>Similarity</span>
+                      <span>Benzerlik</span>
                       <span class="font-semibold">{{ formatScore(it.score) }}</span>
                     </div>
                     <div class="mt-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
@@ -88,7 +88,7 @@
                       <path d="M12 11v6"/>
                       <path d="M9 14h6"/>
                     </svg>
-                    <span>{{ savingWatchlist[getKey(it)] ? 'Adding…' : (addedWatchlist[getKey(it)] ? 'Added' : 'Add to Watchlist') }}</span>
+                    <span>{{ savingWatchlist[getKey(it)] ? 'Ekleniyor…' : (addedWatchlist[getKey(it)] ? 'Eklendi' : 'İzleme Listeme Ekle') }}</span>
                   </button>
                 </div>
               </div>
@@ -103,7 +103,7 @@
             :disabled="loadingMore"
           >
             <span v-if="loadingMore" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin mr-2"></span>
-            {{ loadingMore ? 'Loading…' : 'Load more' }}
+            {{ loadingMore ? 'Yükleniyor…' : 'Daha fazla yükle' }}
           </button>
         </div>
         <div ref="sentinel" class="h-4"></div>
@@ -132,9 +132,9 @@ const addedWatchlist = ref({})
 const sentinel = ref(null)
 const getKey = (it) => `${it.content_type}-${it.tmdb_id}`
 const contentOptions = [
-  { label: 'All', value: 'all' },
-  { label: 'Movies', value: 'movie' },
-  { label: 'TV Shows', value: 'tv' }
+  { label: 'Tümü', value: 'all' },
+  { label: 'Filmler', value: 'movie' },
+  { label: 'Diziler', value: 'tv' }
 ]
 
 const setContentType = (val) => {

@@ -9,7 +9,7 @@
         v-if="!isExpandingSearchExpanded"
         class="search-cover-button"
         @click.stop="handleButtonClick"
-        aria-label="Open where to watch"
+        aria-label="Nerede izlenir aramasını aç"
       />
       <button 
         v-if="!isExpandingSearchExpanded"
@@ -34,7 +34,7 @@
         @click="handleButtonClick"
         class="search-button-text"
       >
-        Where to Watch
+        Nerede İzlenir?
       </button>
       <input 
         v-model="searchQuery"
@@ -43,14 +43,14 @@
         @click="handleInputClick"
         @blur="handleBlur"
         :class="['expanding-search-input', { expanded: isExpandingSearchExpanded }]"
-        placeholder="Search for movies or TV shows"
+        placeholder="Film veya dizi ara"
         ref="searchInput"
       >
       <button 
         v-if="isExpandingSearchExpanded && searchQuery.trim().length >= 3"
         @click.stop="handleSearchClick"
         class="search-action-button"
-        title="Search"
+        title="Ara"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>

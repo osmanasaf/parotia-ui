@@ -16,14 +16,14 @@
               class="font-medium transition-colors"
               :class="isMoviesActive ? 'text-white' : 'text-white/80 hover:text-white'"
             >
-              Movies
+              Filmler
             </NuxtLink>
             <NuxtLink
               to="/tv"
               class="font-medium transition-colors"
               :class="isTVActive ? 'text-white' : 'text-white/80 hover:text-white'"
             >
-              TV Shows
+              Diziler
             </NuxtLink>
             <ExpandingSearch />
             <LoginButton />

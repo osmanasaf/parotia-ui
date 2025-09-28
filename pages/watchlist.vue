@@ -4,14 +4,14 @@
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Watchlist</h2>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">İzleme Listem</h2>
         <label class="flex items-center gap-2 text-white/80">
-          <span>Hide watched</span>
+          <span>İzlenenleri gizle</span>
           <input type="checkbox" v-model="hideWatched" class="w-5 h-5 rounded" />
         </label>
       </div>
 
-      <div v-if="!isLoggedIn" class="text-white/80">Please log in.</div>
+      <div v-if="!isLoggedIn" class="text-white/80">Lütfen giriş yapın.</div>
 
       <div v-else class="space-y-4">
         <div 
@@ -35,17 +35,17 @@
                 <path d="M12 8v4l3 3" />
                 <circle cx="12" cy="12" r="9" />
               </svg>
-              <span>Watched</span>
+              <span>İzlendi</span>
             </button>
           </div>
           <div class="flex items-center gap-3">
-            <div v-if="item.user_rating" class="flex items-center gap-1 text-yellow-400" title="Your rating">
+            <div v-if="item.user_rating" class="flex items-center gap-1 text-yellow-400" title="Puanınız">
               <svg v-for="n in 10" :key="`r-${n}`" class="w-4 h-4" viewBox="0 0 24 24" :fill="n <= item.user_rating ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2">
                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
               </svg>
             </div>
-            <button class="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20" @click="openRate(item)">Rate</button>
-            <button class="px-3 py-2 rounded-lg bg-white/5 text-red-300 hover:bg-red-500/10 ring-1 ring-white/10" @click="onDelete(item)" title="Remove">
+            <button class="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20" @click="openRate(item)">Puanla</button>
+            <button class="px-3 py-2 rounded-lg bg-white/5 text-red-300 hover:bg-red-500/10 ring-1 ring-white/10" @click="onDelete(item)" title="Kaldır">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6v14m8-14v14M5 6l1-3h12l1 3"/></svg>
             </button>
           </div>

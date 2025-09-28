@@ -20,15 +20,15 @@
 import AppHeader from '~/components/layout/AppHeader.vue'
 
 const posts = [
-  { slug: 'introducing-movai', title: 'Introducing movAi: Emotion-based Recommendations', date: '2025-09-01', excerpt: 'How movAi personalizes your movie and TV suggestions using your mood.' },
-  { slug: 'how-our-recommendations-work', title: 'How Our Recommendations Work', date: '2025-09-10', excerpt: 'A peek into our hybrid recommendation approach combining emotion and history.' },
-  { slug: 'product-updates-september', title: 'Product Updates: September', date: '2025-09-20', excerpt: 'A summary of UX improvements, performance tweaks, and new features.' }
+  { slug: 'introducing-movai', title: 'movAi Tanıtımı: Duygu Bazlı Öneriler', date: '2025-09-01', excerpt: 'movAi ruh halinizi kullanarak film ve dizi önerilerini nasıl kişiselleştiriyor?' },
+  { slug: 'how-our-recommendations-work', title: 'Önerilerimiz Nasıl Çalışır?', date: '2025-09-10', excerpt: 'Duygu ve geçmişi birleştiren hibrit yaklaşımımıza kısa bir bakış.' },
+  { slug: 'product-updates-september', title: 'Ürün Güncellemeleri: Eylül', date: '2025-09-20', excerpt: 'UX iyileştirmeleri, performans düzenlemeleri ve yeni özellikler.' }
 ]
 
 useHead({ 
   title: 'Blog',
   meta: [
-    { name: 'description', content: 'News, product updates and insights from movAi.' }
+    { name: 'description', content: 'movAi’den haberler, ürün güncellemeleri ve içerikler.' }
   ]
 })
 </script>
