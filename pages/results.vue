@@ -77,7 +77,7 @@
                       'px-3 py-1.5 rounded-lg text-sm text-white transition-all flex-shrink-0 flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed',
                       addedWatchlist[getKey(it)] ? 'bg-emerald-600 hover:bg-emerald-600' : 'bg-blue-600 hover:bg-blue-700'
                     ]"
-                    :disabled="savingWatchlist[getKey(it)] || addedWatchlist[getKey(it)]"
+                    :disabled="savingWatchlist[getKey(it)] || addedWatchlist[getKey(it)] || !isLoggedIn"
                   >
                     <span v-if="savingWatchlist[getKey(it)]" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
                     <svg v-else-if="addedWatchlist[getKey(it)]" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
