@@ -14,8 +14,8 @@
       <div v-if="!isLoggedIn" class="text-white/80">Lütfen giriş yapın.</div>
 
       <div v-else class="space-y-4">
-        <div 
-          v-for="item in filteredItems" 
+        <div
+          v-for="item in filteredItems"
           :key="`${item.contentType}-${item.id}`"
           class="flex items-center gap-4 bg-white/5 ring-1 ring-white/10 rounded-2xl p-4 hover:bg-white/7 transition-colors"
         >
@@ -52,7 +52,13 @@
         </div>
       </div>
 
-      <RateModal v-model:open="rateOpen" v-model:modelValue="rateValue" :comment="rateComment" @save="onSaveRate" />
+      <RateModal
+        v-model:open="rateOpen"
+        v-model:modelValue="rateValue"
+        :comment="rateComment"
+        :saving="isRateSaving"
+        @save="onSaveRate"
+      />
     </div>
   </div>
 </template>
@@ -71,6 +77,7 @@ const hideWatched = ref(false)
 const rateOpen = ref(false)
 const rateValue = ref(7)
 const rateComment = ref('')
+const isRateSaving = ref(false)
 let currentItem = null
 
 const loadData = async () => {
@@ -88,11 +95,18 @@ const openRate = (item) => {
 }
 
 const onSaveRate = async ({ rating, comment }) => {
-  if (!currentItem) return
-  await rateContent({ tmdbId: currentItem.id, contentType: currentItem.contentType, rating, comment })
-  rateOpen.value = false
-  // UI'da son rating'i göster
-  items.value = items.value.map(i => i.id === currentItem.id && i.contentType === currentItem.contentType ? { ...i, user_rating: rating, user_comment: comment } : i)
+  if (!currentItem || isRateSaving.value) return
+
+  isRateSaving.value = true
+  try {
+    await rateContent({ tmdbId: currentItem.id, contentType: currentItem.contentType, rating, comment })
+    items.value = items.value.map(i => i.id === currentItem.id && i.contentType === currentItem.contentType ? { ...i, user_rating: rating, user_comment: comment } : i)
+    rateOpen.value = false
+  } catch (error) {
+    console.error('Puan kaydetme hatası:', error)
+  } finally {
+    isRateSaving.value = false
+  }
 }
 
 const onToggleWatched = async (item) => {
@@ -111,5 +125,3 @@ const onDelete = async (item) => {
 onMounted(loadData)
 useHead({ title: 'Watchlist - movAi' })
 </script>
-
-

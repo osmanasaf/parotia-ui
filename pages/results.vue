@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="min-h-screen gradient-dark">
     <AppHeader />
 
@@ -7,7 +7,7 @@
         <div>
           <p class="text-sm uppercase tracking-wider text-white/60 mb-1">Yapay zekâ ile öneriler</p>
           <h1 class="text-3xl md:text-5xl font-extrabold text-white">
-            Sizin için seçtiklerimiz
+            Size özel öneriler
             <span class="text-gradient">bugün</span>
           </h1>
           <p class="text-white/70 mt-2">Ruh hâli: <span class="text-white font-semibold">{{ queryText }}</span></p>
@@ -233,6 +233,7 @@ const loadMore = () => {
   fetchResults()
 }
 </script>
+
 
 
 

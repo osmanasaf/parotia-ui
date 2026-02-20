@@ -3,7 +3,7 @@
     <div class="max-w-[90vw] w-[420px] rounded-2xl bg-neutral-900/95 ring-1 ring-white/10 shadow-2xl p-5 overflow-hidden">
       <div class="flex items-center justify-between mb-3">
         <h5 class="text-white font-semibold text-lg">Rate</h5>
-        <button class="text-white/60 hover:text-white" @click="close" aria-label="Close">
+        <button class="text-white/60 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed" :disabled="saving" @click="close" aria-label="Close">
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M6 18L18 6"/></svg>
         </button>
       </div>
@@ -13,6 +13,7 @@
             v-for="n in 10"
             :key="`star-${n}`"
             class="p-1"
+            :disabled="saving"
             @mouseenter="hover = n"
             @mouseleave="hover = 0"
             @click="$emit('update:modelValue', n)"
@@ -24,10 +25,13 @@
         </div>
         <span class="text-white/90 text-sm font-medium ml-3">{{ hover || modelValue }}/10</span>
       </div>
-      <textarea v-model="commentLocal" placeholder="Optional comment" class="mt-4 w-full min-h-24 p-3 rounded-lg bg-neutral-800 text-white placeholder-white/50 ring-1 ring-white/10 focus:outline-none" />
+      <textarea v-model="commentLocal" :disabled="saving" placeholder="Optional comment" class="mt-4 w-full min-h-24 p-3 rounded-lg bg-neutral-800 text-white placeholder-white/50 ring-1 ring-white/10 focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed" />
       <div class="mt-4 flex gap-2 justify-end">
-        <button class="px-3 py-1.5 rounded-md text-white bg-white/10 hover:bg-white/20" @click="close">Cancel</button>
-        <button class="px-3 py-1.5 rounded-md text-white bg-indigo-600 hover:bg-indigo-500" @click="save">Save</button>
+        <button class="px-3 py-1.5 rounded-md text-white bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed" :disabled="saving" @click="close">Cancel</button>
+        <button class="px-3 py-1.5 rounded-md text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2" :disabled="saving" @click="save">
+          <span v-if="saving" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
+          <span>{{ saving ? 'Kaydediliyor...' : 'Save' }}</span>
+        </button>
       </div>
     </div>
   </div>
@@ -37,14 +41,28 @@
 const props = defineProps({
   open: { type: Boolean, default: false },
   modelValue: { type: Number, default: 7 },
-  comment: { type: String, default: '' }
+  comment: { type: String, default: '' },
+  saving: { type: Boolean, default: false }
 })
 
 const emit = defineEmits(['update:open', 'update:modelValue', 'save'])
 const hover = ref(0)
 const commentLocal = ref(props.comment)
 
-const close = () => emit('update:open', false)
+watch(() => props.comment, (newComment) => {
+  commentLocal.value = newComment || ''
+})
+
+watch(() => props.open, (isOpen) => {
+  if (!isOpen) return
+  hover.value = 0
+  commentLocal.value = props.comment || ''
+})
+
+const close = () => {
+  if (props.saving) return
+  emit('update:open', false)
+}
 const save = () => emit('save', { rating: props.modelValue, comment: commentLocal.value })
 </script>
 
