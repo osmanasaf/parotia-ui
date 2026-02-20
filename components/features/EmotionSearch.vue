@@ -17,6 +17,7 @@
             <div class="mood-indicator pause"></div>
             <input 
               v-model="emotionInput"
+              @keydown.enter.prevent="handleGetRecommendations"
               type="text" 
               placeholder="Bugün kendini nasıl hissediyorsun?"
               class="modern-input"
