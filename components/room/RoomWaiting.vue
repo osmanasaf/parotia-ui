@@ -99,9 +99,14 @@
         <div v-if="isCreator && canStart" class="pt-6">
           <button 
             @click="handleStartVoting"
-            class="w-full py-4 bg-white text-black font-bold rounded-2xl hover:bg-white/90 shadow-xl transition-all active:scale-95"
+            :disabled="starting"
+            class="w-full py-4 bg-white text-black font-bold rounded-2xl hover:bg-white/90 shadow-xl transition-all active:scale-95 disabled:opacity-60 flex items-center justify-center gap-3"
           >
-            {{ allReady ? 'Oylamayı Başlat' : 'Erken Başlat' }}
+            <svg v-if="starting" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {{ starting ? 'Oylama Başlatılıyor...' : (allReady ? 'Oylamayı Başlat' : 'Erken Başlat') }}
           </button>
         </div>
       </div>
@@ -121,6 +126,7 @@ const { submitMood, forceStart } = useRoomWs()
 const { getSessionId } = useRoomSession()
 const moodText = ref('')
 const copied = ref(false)
+const starting = ref(false)
 
 const allReady = computed(() => {
   return props.participants.length >= 2 && props.participants.every(p => p.submitted_mood || p.is_ready)
@@ -137,6 +143,7 @@ const handleSubmitMood = () => {
 }
 
 const handleStartVoting = () => {
+  starting.value = true
   forceStart()
 }
 

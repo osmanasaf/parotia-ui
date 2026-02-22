@@ -76,19 +76,31 @@ export const useRoomWs = () => {
                 roomStore.setVotingActive(true)
                 break
             case 'match_found':
-                roomStore.setMatchFound(data.recommendations?.[0] || data.match || {
-                    tmdb_id: data.tmdb_id,
-                    title: data.message || "Eşleşme Bulundu!"
-                })
+                // Interim match mid-voting. Don't stop voting.
+                const matchedTmdbId = data.tmdb_id
+                const movie = roomStore.recommendations.find(m => m.tmdb_id === matchedTmdbId)
+                if (movie) {
+                    // Check if already in interim list
+                    if (!roomStore.interimMatches.some(m => m.tmdb_id === movie.tmdb_id)) {
+                        roomStore.setInterimMatches(movie)
+                    }
+                }
+                break
+            case 'voting_finished':
+                // The final ranked list of matches
+                if (data.matches && data.matches.length > 0) {
+                    const enrichedMatches = data.matches.map(m => {
+                        const rec = roomStore.recommendations.find(r => r.tmdb_id === m.tmdb_id)
+                        return rec || m // fallback to basic ID if not found (shouldn't happen)
+                    })
+                    roomStore.setVotingResults(enrichedMatches)
+                } else {
+                    roomStore.setVotingResults([]) // Fallback in case matches array is empty
+                }
                 roomStore.setVotingActive(false)
                 break
             case 'no_match':
-                // Instead of a match, maybe show a generic no match message
-                roomStore.setMatchFound({
-                    tmdb_id: null,
-                    title: "Eşleşme Bulunamadı",
-                    overview: data.detail || "Kimse aynı yapıma oy vermedi."
-                })
+                roomStore.setVotingResults([])
                 roomStore.setVotingActive(false)
                 break
             default:

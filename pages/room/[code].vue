@@ -14,8 +14,8 @@
       <CinemaSpinner label="Odaya bağlanılıyor..." />
     </div>
 
-    <div v-else-if="roomStore.matchFound" class="animate-fade-in">
-      <RoomMatchFound :match="roomStore.matchFound" />
+    <div v-else-if="roomStore.votingResults !== null" class="animate-fade-in">
+      <RoomMatchFound :results="roomStore.votingResults" />
     </div>
 
     <div v-else-if="roomStore.votingActive" class="animate-fade-in">

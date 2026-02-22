@@ -1,10 +1,18 @@
 <template>
   <div class="min-h-[70vh] w-full flex flex-col items-center justify-center py-12 px-4 overflow-hidden relative">
     <!-- Background Header Stats -->
-    <div class="absolute top-8 left-0 right-0 px-6 flex items-center justify-between z-10">
-      <div class="flex items-center gap-3">
-        <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
-        <span class="text-xs font-bold uppercase tracking-widest text-white/50">CANLI OYLAMA</span>
+    <div class="absolute top-8 left-0 right-0 px-6 flex items-center justify-between z-10 transition-all">
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-3">
+          <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
+          <span class="text-xs font-bold uppercase tracking-widest text-white/50">CANLI OYLAMA</span>
+        </div>
+        <transition name="slide-fade">
+          <div v-if="latestInterimMatch" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2 shadow-lg backdrop-blur-md">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            {{ latestInterimMatch.title }} Eşleşti!
+          </div>
+        </transition>
       </div>
       <div class="flex items-center gap-4">
         <button 
@@ -50,7 +58,7 @@
               <span>{{ movie.release_year }}</span>
               <span>•</span>
               <div class="flex items-center gap-1 text-amber-500">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20 border-white/10">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                 </svg>
                 <span>{{ movie.vote_average?.toFixed(1) }}</span>
@@ -80,17 +88,17 @@
       </div>
 
       <!-- Empty Stack State -->
-      <div v-if="recommendations.length === 0" class="flex flex-col items-center text-center px-8">
+      <div v-if="recommendations.length > 0 && recommendations.length === currentIndex" class="flex flex-col items-center text-center px-8 z-10">
         <div class="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6 animate-pulse">
-          <svg class="w-10 h-10 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          <svg class="w-10 h-10 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
         <h3 class="text-xl font-bold mb-2">Tüm Kartlar Bitti</h3>
-        <p class="text-white/40 text-sm">Diğer katılımcıların oylamayı bitirmesi bekleniyor...</p>
+        <p class="text-white/40 text-sm">Diğer katılımcıların oylamayı bitirmesi veya sürenin dolması bekleniyor...</p>
       </div>
     </div>
 
     <!-- Swipe Controls -->
-    <div v-if="recommendations.length > 0" class="mt-12 flex items-center gap-8 z-10">
+    <div v-if="recommendations.length > currentIndex" class="mt-12 flex items-center gap-8 z-10">
       <button 
         @click="swipeLeftManual"
         class="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-rose-500 hover:bg-rose-500/10 transition-all active:scale-90"
@@ -129,6 +137,18 @@ const recommendations = computed(() => roomStore.recommendations)
 const currentIndex = ref(0)
 const visibleCards = computed(() => {
   return recommendations.value.slice(currentIndex.value, currentIndex.value + 3).reverse()
+})
+
+const latestInterimMatch = computed(() => {
+  const matches = roomStore.interimMatches
+  return matches.length > 0 ? matches[matches.length - 1] : null
+})
+
+// Dismiss toast after a while
+watch(latestInterimMatch, (newVal) => {
+  if (newVal) {
+    // Optionally auto-dismiss, but leaving it sticky or until next match is also fine
+  }
 })
 
 const startX = ref(0)
@@ -284,5 +304,14 @@ const forceEndVoting = () => {
 .swipe-icon {
   pointer-events: none;
   transition: opacity 0.1s ease;
+}
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(-20px);
+  opacity: 0;
 }
 </style>

@@ -7,7 +7,8 @@ export const useRoomStore = defineStore('room', {
         participants: [],
         recommendations: [],
         votingActive: false,
-        matchFound: null,
+        interimMatches: [],
+        votingResults: null,
         myStatus: {
             ready: false,
             submittedMood: false
@@ -36,8 +37,11 @@ export const useRoomStore = defineStore('room', {
         setVotingActive(active) {
             this.votingActive = active
         },
-        setMatchFound(match) {
-            this.matchFound = match
+        setInterimMatches(match) {
+            this.interimMatches.push(match)
+        },
+        setVotingResults(results) {
+            this.votingResults = results
         },
         setExpiresAt(time) {
             this.expiresAt = time
@@ -48,7 +52,8 @@ export const useRoomStore = defineStore('room', {
             this.participants = []
             this.recommendations = []
             this.votingActive = false
-            this.matchFound = null
+            this.interimMatches = []
+            this.votingResults = null
             this.myStatus = {
                 ready: false,
                 submittedMood: false
