@@ -5,6 +5,18 @@ export const useRoomWs = () => {
 
     let socket = null
 
+    const refreshRoomData = async (roomCode) => {
+        try {
+            const res = await $fetch(`${config.public.apiBaseUrl}/rooms/${roomCode}`)
+            if (res) {
+                roomStore.setRoomDetails(res)
+                roomStore.setParticipants(res.participants || [])
+            }
+        } catch (e) {
+            console.error('Failed to refresh room data:', e)
+        }
+    }
+
     const connect = (roomCode) => {
         if (socket) return
 
@@ -43,11 +55,20 @@ export const useRoomWs = () => {
     const handleWsMessage = (data) => {
         switch (data.type) {
             case 'user_joined':
-                roomStore.setParticipants(data.participants || [])
-                // Could also handle custom logic for specific user
+                if (data.participants && Array.isArray(data.participants)) {
+                    roomStore.setParticipants(data.participants)
+                } else if (data.session_id) {
+                    const existing = roomStore.participants.find(p => p.session_id === data.session_id)
+                    if (!existing) {
+                        roomStore.setParticipants([
+                            ...roomStore.participants,
+                            { session_id: data.session_id, user_id: null, mood: null, is_ready: false, submitted_mood: false }
+                        ])
+                    }
+                }
                 break
             case 'user_ready':
-                roomStore.updateParticipantStatus(data.session_id || data.user_id, { ready: true, submitted_mood: true })
+                roomStore.updateParticipantStatus(data.session_id || data.user_id, { ready: true, is_ready: true, submitted_mood: true })
                 break
             case 'start_voting':
                 roomStore.setRecommendations(data.recommendations)

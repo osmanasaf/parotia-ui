@@ -80,11 +80,11 @@
               <div>
                 <div class="font-bold text-sm">{{ p.username || `Misafir ${p.session_id ? p.session_id.substring(0,4).toUpperCase() : i + 1}` }} <span v-if="p.session_id === getSessionId()" class="text-[10px] text-amber-500 font-bold ml-1">(Sen)</span></div>
                 <div class="text-[10px] text-white/40 font-bold uppercase tracking-widest">
-                  {{ p.submitted_mood ? 'HAZIR' : 'BEKLENİYOR' }}
+                  {{ (p.submitted_mood || p.is_ready) ? 'HAZIR' : 'BEKLENİYOR' }}
                 </div>
               </div>
             </div>
-            <div v-if="p.submitted_mood" class="text-emerald-500">
+            <div v-if="p.submitted_mood || p.is_ready" class="text-emerald-500">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
               </svg>
@@ -123,7 +123,7 @@ const moodText = ref('')
 const copied = ref(false)
 
 const allReady = computed(() => {
-  return props.participants.length >= 2 && props.participants.every(p => p.submitted_mood)
+  return props.participants.length >= 2 && props.participants.every(p => p.submitted_mood || p.is_ready)
 })
 
 const canStart = computed(() => {
