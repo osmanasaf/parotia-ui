@@ -5,6 +5,7 @@
       <AuthModal />
     </ClientOnly>
     <AppFooter />
+    <Analytics />
   </div>
 </template>
 
@@ -13,6 +14,7 @@ import { onMounted } from 'vue'
 import { useAuth } from '~/composables/useAuth'
 import { AuthModal } from '~/components/ui'
 import AppFooter from '~/components/layout/AppFooter.vue'
+import { Analytics } from '@vercel/analytics/nuxt'
 
 const { getCurrentUser } = useAuth()
 
