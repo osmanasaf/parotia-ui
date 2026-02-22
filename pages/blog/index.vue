@@ -1,39 +1,70 @@
 <template>
-  <div class="min-h-screen gradient-dark">
+  <div class="min-h-screen bg-[#0d0d0d] text-white">
     <AppHeader />
-    <div class="max-w-5xl mx-auto px-4 py-10">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-6">Blog</h1>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <NuxtLink v-for="post in posts" :key="post.slug" :to="`/blog/${post.slug}`" class="block group">
-          <div class="rounded-2xl bg-white/5 ring-1 ring-white/10 p-6 hover:bg-white/10 transition-colors">
-            <h2 class="text-white text-xl font-semibold group-hover:text-white">{{ post.title }}</h2>
-            <p class="text-white/60 text-sm mt-2">{{ post.excerpt }}</p>
-            <p class="text-white/40 text-xs mt-3">{{ post.date }}</p>
+    
+    <header class="py-20 px-4 text-center relative overflow-hidden">
+      <!-- Background Ambient Glow -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[120px] -z-10"></div>
+      
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+        Sinema & <span class="text-amber-500">Duygular</span>
+      </h1>
+      <p class="text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
+        Yapay zeka analizleri, özel film listeleri ve sinema dünyasından en yeni haberler.
+      </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 pb-24">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <NuxtLink 
+          v-for="post in BLOG_POSTS" 
+          :key="post.slug"
+          :to="`/blog/${post.slug}`"
+          class="group block bg-white/5 rounded-3xl overflow-hidden border border-white/10 hover:border-amber-500/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(245,158,11,0.1)]"
+        >
+          <div class="aspect-video overflow-hidden">
+            <img 
+              :src="post.image" 
+              :alt="post.title"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            >
+          </div>
+          <div class="p-8">
+            <div class="flex items-center gap-3 mb-4 text-white/40 text-sm">
+              <span>{{ post.date }}</span>
+              <span>•</span>
+              <span>{{ post.author }}</span>
+            </div>
+            <h2 class="text-2xl font-bold mb-4 leading-tight group-hover:text-amber-500 transition-colors">
+              {{ post.title }}
+            </h2>
+            <p class="text-white/60 line-clamp-2 leading-relaxed mb-6">
+              {{ post.excerpt }}
+            </p>
+            <div class="flex items-center text-amber-500 font-semibold text-sm group-hover:translate-x-2 transition-transform">
+              Devamını Oku <span class="ml-2">→</span>
+            </div>
           </div>
         </NuxtLink>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
 <script setup>
-import AppHeader from '~/components/layout/AppHeader.vue'
+import { BLOG_POSTS } from '~/constants/blog'
 
-const posts = [
-  { slug: 'introducing-movai', title: 'movAi Tanıtımı: Duygu Bazlı Öneriler', date: '2025-09-01', excerpt: 'movAi ruh halinizi kullanarak film ve dizi önerilerini nasıl kişiselleştiriyor?' },
-  { slug: 'how-our-recommendations-work', title: 'Önerilerimiz Nasıl Çalışır?', date: '2025-09-10', excerpt: 'Duygu ve geçmişi birleştiren hibrit yaklaşımımıza kısa bir bakış.' },
-  { slug: 'product-updates-september', title: 'Ürün Güncellemeleri: Eylül', date: '2025-09-20', excerpt: 'UX iyileştirmeleri, performans düzenlemeleri ve yeni özellikler.' }
-]
-
-useHead({ 
+useSeoMeta({
   title: 'Blog',
-  meta: [
-    { name: 'description', content: 'movAi’den haberler, ürün güncellemeleri ve içerikler.' }
+  description: 'Sinema dünyasından en iyi listeler, yapay zeka analizleri ve film önerileri movAi blog sayfasında.',
+  ogTitle: 'Blog - movAi',
+  ogDescription: 'Sinema dünyasından en iyi listeler ve film önerileri.',
+  ogImage: 'https://images.unsplash.com/photo-1485090916723-95c55531599a?auto=format&fit=crop&q=80&w=1280'
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: 'https://movai.app/blog' }
   ]
 })
 </script>
-
-<style scoped>
-</style>
-
-

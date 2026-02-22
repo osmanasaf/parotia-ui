@@ -25,6 +25,13 @@
             >
               Diziler
             </NuxtLink>
+            <NuxtLink
+              to="/blog"
+              class="font-medium transition-colors"
+              :class="isBlogActive ? 'text-white' : 'text-white/80 hover:text-white'"
+            >
+              Blog
+            </NuxtLink>
             <ExpandingSearch />
             <LoginButton />
           </div>
@@ -43,4 +50,5 @@ import Logo from '~/components/ui/Logo.vue'
 const route = useRoute()
 const isMoviesActive = computed(() => route.path.startsWith('/movie'))
 const isTVActive = computed(() => route.path.startsWith('/tv'))
+const isBlogActive = computed(() => route.path.startsWith('/blog'))
 </script> 

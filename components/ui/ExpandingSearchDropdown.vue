@@ -87,48 +87,53 @@
            <div class="search-result-dropdown-type">{{ result.content_type || result.type }}</div>
          </div>
 
-         <!-- Inline providers panel under the selected result -->
-         <div 
-           v-if="selectedResultId === result.tmdb_id && !providersLoading && selectedProviders.length > 0"
-           class="providers-inline"
-         >
-           <div class="providers-inline-title">Şurada mevcut</div>
-           <div class="providers-inline-grid">
-             <div 
-               v-for="provider in selectedProviders" 
-               :key="provider.id"
-               class="provider-dropdown-item"
-             >
-               <NuxtImg
-                 v-if="provider.logo && provider.logo[0] === '/'"
-                 :src="`https://image.tmdb.org/t/p/w45${provider.logo}`"
-                 :alt="provider.name"
-                 width="24"
-                 height="24"
-                 class="provider-logo-img"
-                 loading="lazy"
-               />
-               <div v-else class="provider-logo-fallback" :style="{backgroundColor: provider.color}">
-                 {{ provider.name?.[0] || '?' }}
-               </div>
-               <span class="provider-dropdown-name">{{ provider.name }}</span>
-             </div>
-           </div>
-         </div>
-         <!-- Providers loading state -->
-         <div
-           v-if="selectedResultId === result.tmdb_id && providersLoading"
-           class="providers-inline providers-loading"
-         >
-           <div class="spinner" aria-label="Yükleniyor" />
-         </div>
-         <!-- Providers empty state -->
-         <div
-           v-if="selectedResultId === result.tmdb_id && !providersLoading && selectedProviders.length === 0"
-           class="providers-inline providers-empty"
-         >
-           <div class="providers-inline-title">⚠️ Bu ülkede mevcut değil</div>
-         </div>
+          <!-- Inline providers panel under the selected result -->
+          <div 
+            v-if="selectedResultId === result.tmdb_id && !providersLoading"
+            class="providers-inline"
+          >
+            <div class="providers-inline-header flex items-center justify-between mb-3 border-b border-white/10 pb-2">
+              <span class="text-[10px] font-bold text-white/50 tracking-widest">NEREDE İZLENİR?</span>
+              <button 
+                @click.stop="goToDetails(result)"
+                class="text-[10px] font-bold text-amber-500 hover:text-amber-400 bg-amber-500/10 px-2 py-1 rounded transition-colors"
+              >
+                DETAYLARI GÖR →
+              </button>
+            </div>
+
+            <div v-if="selectedProviders.length > 0" class="providers-inline-grid">
+              <div 
+                v-for="provider in selectedProviders" 
+                :key="provider.id"
+                class="provider-dropdown-item"
+              >
+                <NuxtImg
+                  v-if="provider.logo && provider.logo[0] === '/'"
+                  :src="`https://image.tmdb.org/t/p/w45${provider.logo}`"
+                  :alt="provider.name"
+                  width="24"
+                  height="24"
+                  class="provider-logo-img"
+                  loading="lazy"
+                />
+                <div v-else class="provider-logo-fallback" :style="{backgroundColor: provider.color}">
+                  {{ provider.name?.[0] || '?' }}
+                </div>
+                <span class="provider-dropdown-name">{{ provider.name }}</span>
+              </div>
+            </div>
+            <div v-else class="providers-empty text-[11px] text-white/40 py-2 italic text-center">
+              Bu ülkede henüz dijital platformlarda mevcut değil.
+            </div>
+          </div>
+          <!-- Providers loading state -->
+          <div
+            v-if="selectedResultId === result.tmdb_id && providersLoading"
+            class="providers-inline providers-loading"
+          >
+            <div class="spinner" aria-label="Yükleniyor" />
+          </div>
        </div>
      </div>
 
@@ -198,6 +203,14 @@ const handleRecentClick = async (search) => {
   await selectRecentSearch(search)
   providersLoading.value = false
   providersLoadedForId.value = search.id
+}
+
+const goToDetails = (result) => {
+  searchStore.toggleExpandingSearch() // Modal'ı kapat
+  const id = result.tmdb_id ?? result.id
+  const type = result.content_type || result.type
+  const path = type === 'tv' ? `/tv/${id}` : `/movie/${id}`
+  navigateTo(path)
 }
 
 

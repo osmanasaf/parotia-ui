@@ -1,2 +1,21 @@
-User-Agent: *
-Disallow:
+User-agent: *
+Allow: /
+Disallow: /auth/
+Disallow: /settings
+Disallow: /watchlist
+
+# Sitemaps
+Sitemap: https://movai.app/sitemap.xml
+
+# AI Crawler Governance
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /

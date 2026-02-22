@@ -8,7 +8,6 @@
           <p class="text-sm uppercase tracking-wider text-white/60 mb-1">Yapay zekâ ile öneriler</p>
           <h1 class="text-3xl md:text-5xl font-extrabold text-white">
             Size özel öneriler
-            <span class="text-gradient">bugün</span>
           </h1>
           <p class="text-white/70 mt-2">Ruh hâli: <span class="text-white font-semibold">{{ queryText }}</span></p>
         </div>
@@ -58,38 +57,45 @@
                     <span class="text-white/90">{{ (it.vote_average ?? 0).toFixed(1) }}</span>
                   </div>
                 </div>
-                <div class="mt-2 flex items-center justify-between gap-3">
-                  <div v-if="it.score != null" class="flex-1">
+                <div class="mt-2 flex flex-col gap-2">
+                  <div v-if="it.score != null" class="w-full">
                     <div class="flex items-center justify-between text-[11px] text-white/80">
-                      <span>Benzerlik</span>
-                      <span class="font-semibold">{{ formatScore(it.score) }}</span>
+                      <span>Eşleşme Oranı</span>
+                      <span class="font-bold text-amber-500">{{ formatScore(it.score) }}</span>
                     </div>
-                    <div class="mt-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                    <div class="mt-1 h-1 rounded-full bg-white/10 overflow-hidden">
                       <div 
-                        class="h-full bg-gradient-to-r from-indigo-400 via-fuchsia-400 to-rose-400" 
+                        class="h-full bg-amber-500" 
                         :style="{ width: formatScore(it.score) }"
                       ></div>
                     </div>
                   </div>
-                  <button 
-                    @click.stop="handleAddToWatchlist(it)" 
-                    :class="[
-                      'px-3 py-1.5 rounded-lg text-sm text-white transition-all flex-shrink-0 flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed',
-                      addedWatchlist[getKey(it)] ? 'bg-emerald-600 hover:bg-emerald-600' : 'bg-blue-600 hover:bg-blue-700'
-                    ]"
-                    :disabled="savingWatchlist[getKey(it)] || addedWatchlist[getKey(it)] || !isLoggedIn"
-                  >
-                    <span v-if="savingWatchlist[getKey(it)]" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
-                    <svg v-else-if="addedWatchlist[getKey(it)]" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M5 13l4 4L19 7"/>
-                    </svg>
-                    <svg v-else class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M6 20l6-4 6 4V6a2 2 0 00-2-2H8a2 2 0 00-2 2z"/>
-                      <path d="M12 11v6"/>
-                      <path d="M9 14h6"/>
-                    </svg>
-                    <span>{{ savingWatchlist[getKey(it)] ? 'Ekleniyor…' : (addedWatchlist[getKey(it)] ? 'Eklendi' : 'İzleme Listeme Ekle') }}</span>
-                  </button>
+                  
+                  <div class="flex items-center gap-2">
+                    <button 
+                      @click.stop="openDetail(it)"
+                      class="flex-1 px-3 py-1.5 rounded-lg bg-white/10 text-white text-xs font-semibold hover:bg-white/20 transition-all border border-white/10"
+                    >
+                      Beni Oraya Götür
+                    </button>
+                    <button 
+                      @click.stop="handleAddToWatchlist(it)" 
+                      :class="[
+                        'p-1.5 rounded-lg text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed border border-white/10',
+                        addedWatchlist[getKey(it)] ? 'bg-emerald-600/20 text-emerald-500 border-emerald-500/50' : 'bg-white/5 hover:bg-white/15'
+                      ]"
+                      :title="addedWatchlist[getKey(it)] ? 'Listende' : 'İzleme Listesine Ekle'"
+                      :disabled="savingWatchlist[getKey(it)] || addedWatchlist[getKey(it)] || !isLoggedIn"
+                    >
+                      <span v-if="savingWatchlist[getKey(it)]" class="inline-block w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
+                      <svg v-else-if="addedWatchlist[getKey(it)]" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M5 13l4 4L19 7"/>
+                      </svg>
+                      <svg v-else class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 20l6-4 6 4V6a2 2 0 00-2-2H8a2 2 0 00-2 2z"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

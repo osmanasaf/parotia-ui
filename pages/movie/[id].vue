@@ -625,10 +625,42 @@ watch(
   },
   { immediate: true }
 )
+useSeoMeta({
+  title: () => movieDetail.value ? `${movieDetail.value.title} - movAi` : 'Film Detayları',
+  ogTitle: () => movieDetail.value ? `${movieDetail.value.title} - movAi` : 'Film Detayları',
+  description: () => movieDetail.value ? `${movieDetail.value.overview}` : 'Film detay sayfası',
+  ogDescription: () => movieDetail.value ? `${movieDetail.value.overview}` : 'Film detay sayfası',
+  ogImage: () => movieDetail.value ? `https://image.tmdb.org/t/p/w1280${movieDetail.value.backdrop_path}` : '/og-image.jpg',
+  twitterCard: 'summary_large_image',
+})
+
+const movieJsonLd = computed(() => {
+  if (!movieDetail.value) return ''
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Movie",
+    "name": movieDetail.value.title,
+    "image": movieDetail.value.poster_path ? [`https://image.tmdb.org/t/p/w500${movieDetail.value.poster_path}`] : [],
+    "description": movieDetail.value.overview,
+    "datePublished": movieDetail.value.release_date,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": movieDetail.value.vote_average,
+      "bestRating": "10",
+      "worstRating": "1"
+    }
+  })
+})
+
 useHead({
-  title: computed(() => movieDetail.value ? `${movieDetail.value.title} - movAi` : 'Film Detayları - movAi'),
-  meta: [
-    { name: 'description', content: computed(() => movieDetail.value?.overview || 'Film detay sayfası') }
+  link: [
+    { rel: 'canonical', href: () => `https://movai.app/movie/${movieId}` }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: movieJsonLd
+    }
   ]
 })
 </script>
