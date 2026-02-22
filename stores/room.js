@@ -26,8 +26,8 @@ export const useRoomStore = defineStore('room', {
         setParticipants(participants) {
             this.participants = participants
         },
-        updateParticipantStatus(participantId, status) {
-            const p = this.participants.find(p => p.id === participantId)
+        updateParticipantStatus(participantSessionId, status) {
+            const p = this.participants.find(p => p.session_id === participantSessionId)
             if (p) Object.assign(p, status)
         },
         setRecommendations(list) {

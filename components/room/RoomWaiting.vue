@@ -64,13 +64,13 @@
         <h3 class="text-xs font-bold text-white/40 uppercase tracking-[0.2em]">KATILIMCILAR ({{ participants.length }}/5)</h3>
         <div class="space-y-3">
           <div 
-            v-for="p in participants" :key="p.id"
+            v-for="(p, i) in participants" :key="p.session_id || i"
             class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group hover:bg-white/10 transition-all"
           >
             <div class="flex items-center gap-3">
               <div class="relative">
                 <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-rose-400 flex items-center justify-center font-bold text-black border-2 border-transparent group-hover:border-white/20 transition-all">
-                  {{ p.username?.charAt(0).toUpperCase() || '?' }}
+                  {{ (p.username?.charAt(0) || 'M').toUpperCase() }}
                 </div>
                 <div 
                   v-if="p.is_online"
@@ -78,7 +78,7 @@
                 ></div>
               </div>
               <div>
-                <div class="font-bold text-sm">{{ p.username }} <span v-if="p.is_me" class="text-[10px] text-white/30 font-normal">(Sen)</span></div>
+                <div class="font-bold text-sm">{{ p.username || `Misafir ${p.session_id ? p.session_id.substring(0,4).toUpperCase() : i + 1}` }} <span v-if="p.session_id === getSessionId()" class="text-[10px] text-amber-500 font-bold ml-1">(Sen)</span></div>
                 <div class="text-[10px] text-white/40 font-bold uppercase tracking-widest">
                   {{ p.submitted_mood ? 'HAZIR' : 'BEKLENİYOR' }}
                 </div>
@@ -118,7 +118,7 @@ const props = defineProps({
 
 const roomStore = useRoomStore()
 const { submitMood, forceStart } = useRoomWs()
-const { getAuthHeaders } = useTokenManager()
+const { getSessionId } = useRoomSession()
 const moodText = ref('')
 const copied = ref(false)
 

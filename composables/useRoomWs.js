@@ -1,7 +1,7 @@
 export const useRoomWs = () => {
     const roomStore = useRoomStore()
     const config = useRuntimeConfig()
-    const { getToken } = useTokenManager()
+    const { getSessionId } = useRoomSession()
 
     let socket = null
 
@@ -9,8 +9,8 @@ export const useRoomWs = () => {
         if (socket) return
 
         const WS_BASE_URL = config.public.apiBaseUrl.replace('http', 'ws')
-        const token = getToken()
-        const url = `${WS_BASE_URL}/rooms/${roomCode}/ws?token=${token}`
+        const sessionId = getSessionId()
+        const url = `${WS_BASE_URL}/rooms/${roomCode}/ws?session_id=${sessionId}`
 
         socket = new WebSocket(url)
 
@@ -47,7 +47,7 @@ export const useRoomWs = () => {
                 // Could also handle custom logic for specific user
                 break
             case 'user_ready':
-                roomStore.updateParticipantStatus(data.user_id, { ready: true })
+                roomStore.updateParticipantStatus(data.session_id || data.user_id, { ready: true, submitted_mood: true })
                 break
             case 'start_voting':
                 roomStore.setRecommendations(data.recommendations)

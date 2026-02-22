@@ -2,7 +2,9 @@
   <div class="min-h-screen bg-[var(--bg-base)] text-white relative overflow-hidden">
     <!-- Grain Overlay -->
     <div class="home-hero-grain" />
-    <AppHeader />
+    <div class="relative z-50">
+      <AppHeader />
+    </div>
     
     <main class="flex flex-col items-center justify-center py-20 px-4">
     <!-- Background Ambient Glow -->
@@ -113,6 +115,7 @@ const roomStore = useRoomStore()
 const uiStore = useUIStore()
 const authStore = useAuthStore()
 const { getAuthHeaders } = useTokenManager()
+const { getSessionId } = useRoomSession()
 
 const showJoinInput = ref(false)
 const showCreateOptions = ref(false)
@@ -151,9 +154,13 @@ const handleCreateRoom = async () => {
   }
   creating.value = true
   try {
+    const payload = {
+      ...createForm.value,
+      creator_session_id: getSessionId()
+    }
     const res = await $fetch(`${useRuntimeConfig().public.apiBaseUrl}/rooms/`, {
       method: 'POST',
-      body: createForm.value,
+      body: payload,
       headers: getAuthHeaders()
     })
     
@@ -172,9 +179,7 @@ const handleJoinRoom = async () => {
   joining.value = true
   try {
     const code = joinCode.value.toUpperCase()
-    const res = await $fetch(`${useRuntimeConfig().public.apiBaseUrl}/rooms/${code}`, {
-      headers: getAuthHeaders()
-    })
+    const res = await $fetch(`${useRuntimeConfig().public.apiBaseUrl}/rooms/${code}`)
     
     if (res) {
       roomStore.setRoomCode(code)

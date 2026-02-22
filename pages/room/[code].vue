@@ -2,7 +2,9 @@
   <div class="min-h-screen bg-[var(--bg-base)] text-white relative overflow-hidden">
     <!-- Grain Overlay -->
     <div class="home-hero-grain" />
-    <AppHeader />
+    <div class="relative z-50">
+      <AppHeader />
+    </div>
     
     <!-- Background Ambient Glow -->
     <div class="home-hero-ambient" />
@@ -44,20 +46,18 @@ const roomCode = route.params.code
 const roomStore = useRoomStore()
 const authStore = useAuthStore()
 const { connect, disconnect } = useRoomWs()
-const { getAuthHeaders } = useTokenManager()
+const { getSessionId } = useRoomSession()
 
 const loading = ref(true)
 
 const isCreator = computed(() => {
-  return roomStore.roomDetails?.creator_id === authStore.user?.id
+  return roomStore.roomDetails?.creator_session_id === getSessionId()
 })
 
 onMounted(async () => {
   try {
     // Fetch room details first
-    const res = await $fetch(`${useRuntimeConfig().public.apiBaseUrl}/rooms/${roomCode}`, {
-      headers: getAuthHeaders()
-    })
+    const res = await $fetch(`${useRuntimeConfig().public.apiBaseUrl}/rooms/${roomCode}`)
     
     if (res) {
       roomStore.setRoomDetails(res)
