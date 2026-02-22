@@ -13,24 +13,17 @@
           <div class="ml-10 flex items-center space-x-6">
             <NuxtLink
               to="/movie"
-              class="font-medium transition-colors"
-              :class="isMoviesActive ? 'text-white' : 'text-white/80 hover:text-white'"
+              class="font-medium transition-colors duration-200"
+              :class="isMoviesActive ? 'text-[#F5A623]' : 'text-white/70 hover:text-[#F5A623]'"
             >
               Filmler
             </NuxtLink>
             <NuxtLink
               to="/tv"
-              class="font-medium transition-colors"
-              :class="isTVActive ? 'text-white' : 'text-white/80 hover:text-white'"
+              class="font-medium transition-colors duration-200"
+              :class="isTVActive ? 'text-[#F5A623]' : 'text-white/70 hover:text-[#F5A623]'"
             >
               Diziler
-            </NuxtLink>
-            <NuxtLink
-              to="/blog"
-              class="font-medium transition-colors"
-              :class="isBlogActive ? 'text-white' : 'text-white/80 hover:text-white'"
-            >
-              Blog
             </NuxtLink>
             <ExpandingSearch />
             <LoginButton />
@@ -50,5 +43,4 @@ import Logo from '~/components/ui/Logo.vue'
 const route = useRoute()
 const isMoviesActive = computed(() => route.path.startsWith('/movie'))
 const isTVActive = computed(() => route.path.startsWith('/tv'))
-const isBlogActive = computed(() => route.path.startsWith('/blog'))
 </script> 

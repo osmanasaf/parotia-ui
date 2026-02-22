@@ -1,5 +1,7 @@
 <template>
-  <div class="min-h-screen bg-[#0d0d0d] text-white">
+  <div class="min-h-screen bg-[var(--bg-base)] text-white relative">
+    <!-- Grain Overlay -->
+    <div class="home-hero-grain" />
     <AppHeader />
     
     <main v-if="post" class="max-w-4xl mx-auto px-4 py-12">

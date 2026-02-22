@@ -1,10 +1,12 @@
 <template>
-  <div class="min-h-screen bg-[#0d0d0d] text-white">
+  <div class="min-h-screen bg-[var(--bg-base)] text-white relative">
+    <!-- Grain Overlay -->
+    <div class="home-hero-grain" />
     <AppHeader />
     
     <header class="py-20 px-4 text-center relative overflow-hidden">
       <!-- Background Ambient Glow -->
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[120px] -z-10"></div>
+      <div class="home-hero-ambient" />
       
       <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
         Sinema & <span class="text-amber-500">Duygular</span>
