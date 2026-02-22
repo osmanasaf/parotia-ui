@@ -1,9 +1,9 @@
+let socket = null
+
 export const useRoomWs = () => {
     const roomStore = useRoomStore()
     const config = useRuntimeConfig()
     const { getSessionId } = useRoomSession()
-
-    let socket = null
 
     const refreshRoomData = async (roomCode) => {
         try {
