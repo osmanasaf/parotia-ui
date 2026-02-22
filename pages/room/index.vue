@@ -20,7 +20,7 @@
         
         <div class="space-y-4">
           <button 
-            @click="showCreateOptions = true"
+            @click="handleCreateClick"
             class="w-full py-4 px-6 bg-amber-500 text-black font-bold rounded-2xl hover:bg-amber-400 transition-all shadow-[0_10px_30px_rgba(245,158,11,0.2)] active:scale-95"
           >
             Yeni Oda Oluştur
@@ -32,6 +32,10 @@
             Bir Odaya Katıl
           </button>
         </div>
+
+          <p v-if="authErrorMessage" class="text-amber-400 text-sm text-center mt-4 animate-fade-in">
+            {{ authErrorMessage }}
+          </p>
       </div>
 
       <!-- Create Room Options -->
@@ -106,12 +110,16 @@
 import AppHeader from '~/components/layout/AppHeader.vue'
 const { createRoom, getRoomDetails } = useApi() // need to check if these exist or need to add
 const roomStore = useRoomStore()
+const uiStore = useUIStore()
+const authStore = useAuthStore()
+const { getAuthHeaders } = useTokenManager()
 
 const showJoinInput = ref(false)
 const showCreateOptions = ref(false)
 const creating = ref(false)
 const joining = ref(false)
 const joinCode = ref('')
+const authErrorMessage = ref('')
 
 const contentTypes = [
   { label: 'Film', value: 'movie' },
@@ -125,17 +133,28 @@ const createForm = ref({
   duration_minutes: 5
 })
 
+const handleCreateClick = () => {
+  if (!authStore.isAuthenticated) {
+    authErrorMessage.value = 'Oda oluşturmak için giriş yapmalısınız.'
+    uiStore.openLoginModal()
+    return
+  }
+  authErrorMessage.value = ''
+  showCreateOptions.value = true
+}
+
 const handleCreateRoom = async () => {
+  if (!authStore.isAuthenticated) {
+    authErrorMessage.value = 'Oda oluşturmak için giriş yapmalısınız.'
+    uiStore.openLoginModal()
+    return
+  }
   creating.value = true
   try {
-    // We assume backend/REST API follows the rules/movie-room.md
-    // API: POST /rooms/
     const res = await $fetch(`${useRuntimeConfig().public.apiBaseUrl}/rooms/`, {
       method: 'POST',
       body: createForm.value,
-      headers: {
-        ...(useAuthStore().token ? { 'Authorization': `Bearer ${useAuthStore().token}` } : {})
-      }
+      headers: getAuthHeaders()
     })
     
     if (res.code) {
@@ -153,11 +172,8 @@ const handleJoinRoom = async () => {
   joining.value = true
   try {
     const code = joinCode.value.toUpperCase()
-    // Verification if room exists
     const res = await $fetch(`${useRuntimeConfig().public.apiBaseUrl}/rooms/${code}`, {
-      headers: {
-        ...(useAuthStore().token ? { 'Authorization': `Bearer ${useAuthStore().token}` } : {})
-      }
+      headers: getAuthHeaders()
     })
     
     if (res) {
