@@ -365,7 +365,15 @@
         <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">
           🎭 Benzer Filmler
         </h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+        <div v-if="isLoadingSimilar" class="py-12 flex flex-col items-center justify-center bg-white/5 rounded-2xl border border-white/10">
+          <CinemaSpinner size="md" />
+          <p class="mt-4 text-white/70 italic animate-pulse">
+            Yapay zeka size önerileri hazırlıyor...
+          </p>
+        </div>
+
+        <div v-else-if="similarMovies.length > 0" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
           <div 
             v-for="similar in similarMovies" 
             :key="similar.id"
@@ -395,6 +403,10 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div v-else class="text-center py-8 text-white/50">
+          Henüz benzer film bulunamadı.
         </div>
       </div>
     </div>
@@ -427,6 +439,7 @@ const movieDetail = ref(null)
 const watchProviders = ref([])
 const similarMovies = ref([])
 const isLoading = ref(true)
+const isLoadingSimilar = ref(false)
 const isLoadingProviders = ref(false)
 const selectedCountry = ref('TR')
 const mockSimilarMovies = [
@@ -442,14 +455,11 @@ const loadMovieDetail = async () => {
   isLoading.value = true
   
   try {
-    const { getMovieDetailsWithSimilar, getMovieDetailsWithSimilarPublic } = useApi()
-    const { isLoggedIn } = useAuth()
-    const response = isLoggedIn.value
-      ? await getMovieDetailsWithSimilar(movieId)
-      : await getMovieDetailsWithSimilarPublic(movieId)
+    const { getMovieDetailsPublic } = useApi()
+    const response = await getMovieDetailsPublic(movieId)
     
     if (response.success && response.data) {
-      const data = response.data.detail || response.data
+      const data = response.data
       movieDetail.value = {
         tmdb_id: data.id,
         title: data.title,
@@ -458,26 +468,24 @@ const loadMovieDetail = async () => {
         release_date: data.release_date,
         runtime: data.runtime,
         genres: data.genres || [],
+        genre_names: data.genre_names || data.genres?.map(g => g.name) || [],
         poster_path: data.poster_path,
         backdrop_path: data.backdrop_path,
         cast: data.cast || [],
         crew: data.crew || [],
+        director: data.director || data.crew?.find(c => c.job === 'Director')?.name || '',
         production_companies: data.production_companies || []
       }
-    }
-    // similar
-    if (response.success && response.data?.similar) {
-      similarMovies.value = response.data.similar.map(s => ({
-        id: s.tmdb_id,
-        title: s.title || s.name,
-        rating: s.vote_average,
-        poster: s.poster_path,
-      }))
     } else {
-      similarMovies.value = mockSimilarMovies
+      throw new Error('Film detayı bulunamadı')
     }
     
-    await loadWatchProviders()
+    // Detay yüklendi, artık içeriği gösterebiliriz
+    isLoading.value = false
+    
+    // Diğerlerini paralel başlat ama beklemeyi benzer filmler için ayrı yapalım
+    loadSimilarMovies()
+    loadWatchProviders()
     
   } catch (error) {
     console.error('Film detayı yüklenirken hata:', error)
@@ -494,10 +502,33 @@ const loadMovieDetail = async () => {
       director: mockData.director,
       cast: mockData.cast
     }
-    similarMovies.value = mockSimilarMovies
-    await loadWatchProviders()
-  } finally {
     isLoading.value = false
+    loadSimilarMovies()
+    loadWatchProviders()
+  }
+}
+
+const loadSimilarMovies = async () => {
+  isLoadingSimilar.value = true
+  try {
+    const { getSimilarMoviesPublic } = useApi()
+    const response = await getSimilarMoviesPublic(movieId)
+    
+    if (response.success && response.data) {
+      similarMovies.value = response.data.map(s => ({
+        id: s.tmdb_id,
+        title: s.title || s.name,
+        rating: s.vote_average,
+        poster: s.poster_path,
+      }))
+    } else {
+      similarMovies.value = mockSimilarMovies
+    }
+  } catch (error) {
+    console.warn('Benzer filmler yüklenirken hata:', error)
+    similarMovies.value = mockSimilarMovies
+  } finally {
+    isLoadingSimilar.value = false
   }
 }
 

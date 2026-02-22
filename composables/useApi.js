@@ -1,11 +1,11 @@
 export const useApi = () => {
   const config = useRuntimeConfig()
   const { getToken, isTokenValid } = useTokenManager()
-  
+
   const API_BASE_URL = config.public.apiBaseUrl || 'http://localhost:8000'
   const apiCall = async (endpoint, options = {}) => {
     const token = getToken?.() || null
-    
+
     try {
       const response = await $fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
@@ -40,9 +40,9 @@ export const useApi = () => {
       })
     } catch (error) {
       console.warn('API çağrısı başarısız, mock data kullanılıyor:', error)
-      return { 
-        success: true, 
-        data: { 
+      return {
+        success: true,
+        data: {
           recommendations: getMockRecommendations(emotionText).recommendations.map(rec => ({
             tmdb_id: rec.tmdb_id,
             content_type: 'movie',
@@ -74,9 +74,9 @@ export const useApi = () => {
       })
     } catch (error) {
       console.warn('API çağrısı başarısız, mock data kullanılıyor:', error)
-      return { 
-        success: true, 
-        data: { 
+      return {
+        success: true,
+        data: {
           recommendations: getMockRecommendations(emotionText).recommendations.map(rec => ({
             tmdb_id: rec.tmdb_id,
             content_type: 'movie',
@@ -101,9 +101,9 @@ export const useApi = () => {
       return await apiCall(`/movies/${tmdbId}`)
     } catch (error) {
       console.warn('API çağrısı başarısız, mock data kullanılıyor:', error)
-      return { 
-        success: true, 
-        data: getMockMovieDetail(tmdbId) 
+      return {
+        success: true,
+        data: getMockMovieDetail(tmdbId)
       }
     }
   }
@@ -124,13 +124,31 @@ export const useApi = () => {
     }
   }
 
+  const getMovieDetailsPublic = async (tmdbId) => {
+    try {
+      return await apiCall(`/movies/details-public/${tmdbId}`)
+    } catch (error) {
+      console.warn('API details-public failed:', error)
+      return { success: false, data: getMockMovieDetail(tmdbId) }
+    }
+  }
+
+  const getSimilarMoviesPublic = async (tmdbId) => {
+    try {
+      return await apiCall(`/movies/similar-public/${tmdbId}`)
+    } catch (error) {
+      console.warn('API similar-public failed:', error)
+      return { success: false, data: [] }
+    }
+  }
+
   const getWatchProviders = async (tmdbId, country = 'TR') => {
     try {
       return await apiCall(`/movies/${tmdbId}/watch-providers`)
     } catch (error) {
       console.warn('API çağrısı başarısız, mock data kullanılıyor:', error)
-      return { 
-        success: true, 
+      return {
+        success: true,
         data: {
           results: {
             [country]: {
@@ -175,11 +193,11 @@ export const useApi = () => {
         method: 'POST',
         body: { email, password }
       })
-      
+
       if (response.access_token && process.client) {
         localStorage.setItem('movai_token', response.access_token)
       }
-      
+
       return response
     } catch (error) {
       console.error('Login failed:', error)
@@ -243,58 +261,58 @@ export const useApi = () => {
           total_pages: 1,
           total_results: 5,
           results: [
-            { 
-              id: 1, 
-              title: "Inception", 
+            {
+              id: 1,
+              title: "Inception",
               name: "Inception",
-              overview: "Rüya içinde rüya konseptini işleyen bilim kurgu filmi...", 
-              poster_path: null, 
-              release_date: "2010-07-16", 
+              overview: "Rüya içinde rüya konseptini işleyen bilim kurgu filmi...",
+              poster_path: null,
+              release_date: "2010-07-16",
               first_air_date: "2010-07-16",
               vote_average: 8.8,
               media_type: "movie"
             },
-            { 
-              id: 2, 
-              title: "Breaking Bad", 
+            {
+              id: 2,
+              title: "Breaking Bad",
               name: "Breaking Bad",
-              overview: "Kimya öğretmeni Walter White'ın suç dünyasına girişi...", 
-              poster_path: null, 
-              first_air_date: "2008-01-20", 
+              overview: "Kimya öğretmeni Walter White'ın suç dünyasına girişi...",
+              poster_path: null,
+              first_air_date: "2008-01-20",
               vote_average: 9.5,
               media_type: "tv"
             },
-            { 
-              id: 3, 
-              title: "The Dark Knight", 
+            {
+              id: 3,
+              title: "The Dark Knight",
               name: "The Dark Knight",
-              overview: "Batman'in Joker ile mücadelesi...", 
-              poster_path: null, 
-              release_date: "2008-07-18", 
+              overview: "Batman'in Joker ile mücadelesi...",
+              poster_path: null,
+              release_date: "2008-07-18",
               vote_average: 9.0,
               media_type: "movie"
             },
-            { 
-              id: 4, 
-              title: "Stranger Things", 
+            {
+              id: 4,
+              title: "Stranger Things",
               name: "Stranger Things",
-              overview: "Hawkins kasabasında garip olaylar...", 
-              poster_path: null, 
-              first_air_date: "2016-07-15", 
+              overview: "Hawkins kasabasında garip olaylar...",
+              poster_path: null,
+              first_air_date: "2016-07-15",
               vote_average: 8.7,
               media_type: "tv"
             },
-            { 
-              id: 5, 
-              title: "The Shawshank Redemption", 
+            {
+              id: 5,
+              title: "The Shawshank Redemption",
               name: "The Shawshank Redemption",
-              overview: "Umut ve dostluk hakkında güçlü bir hikaye...", 
-              poster_path: null, 
-              release_date: "1994-09-23", 
+              overview: "Umut ve dostluk hakkında güçlü bir hikaye...",
+              poster_path: null,
+              release_date: "1994-09-23",
               vote_average: 9.3,
               media_type: "movie"
             }
-          ].filter(item => 
+          ].filter(item =>
             contentType === 'all' || item.media_type === contentType
           )
         }
@@ -497,8 +515,8 @@ export const useApi = () => {
       return await apiCall(`/tv/${tmdbId}`)
     } catch (error) {
       console.warn('API çağrısı başarısız, mock data kullanılıyor:', error)
-      return { 
-        success: true, 
+      return {
+        success: true,
         data: {
           id: tmdbId,
           name: `Harika Dizi ${tmdbId}`,
@@ -509,8 +527,8 @@ export const useApi = () => {
           number_of_seasons: 3,
           number_of_episodes: 30,
           genres: [
-            {id: 18, name: "Drama"},
-            {id: 10765, name: "Sci-Fi & Fantasy"}
+            { id: 18, name: "Drama" },
+            { id: 10765, name: "Sci-Fi & Fantasy" }
           ],
           poster_path: null,
           backdrop_path: null,
@@ -542,6 +560,8 @@ export const useApi = () => {
     getHybridRecommendations,
     getEmotionRecommendations,
     getMovieDetail,
+    getMovieDetailsPublic,
+    getSimilarMoviesPublic,
     getMovieDetailsWithSimilar,
     getMovieDetailsWithSimilarPublic,
     getTVDetail,
@@ -574,13 +594,13 @@ export const useAuth = () => {
     try {
       const { loginUser, getCurrentUser } = useApi()
       const response = await loginUser(email, password)
-      
+
       if (response.access_token) {
         const userInfo = await getCurrentUser()
         user.value = userInfo
         return { success: true, user: userInfo }
       }
-      
+
       return { success: false, error: 'Token alınamadı' }
     } catch (error) {
       return { success: false, error: error.message }
