@@ -1,7 +1,7 @@
 export const useRoomWs = () => {
     const roomStore = useRoomStore()
-    const authStore = useAuthStore()
     const config = useRuntimeConfig()
+    const { getToken } = useTokenManager()
 
     let socket = null
 
@@ -9,7 +9,7 @@ export const useRoomWs = () => {
         if (socket) return
 
         const WS_BASE_URL = config.public.apiBaseUrl.replace('http', 'ws')
-        const token = authStore.token
+        const token = getToken()
         const url = `${WS_BASE_URL}/rooms/${roomCode}/ws?token=${token}`
 
         socket = new WebSocket(url)
@@ -55,7 +55,19 @@ export const useRoomWs = () => {
                 roomStore.setVotingActive(true)
                 break
             case 'match_found':
-                roomStore.setMatchFound(data.recommendations?.[0] || data.match)
+                roomStore.setMatchFound(data.recommendations?.[0] || data.match || {
+                    tmdb_id: data.tmdb_id,
+                    title: data.message || "Eşleşme Bulundu!"
+                })
+                roomStore.setVotingActive(false)
+                break
+            case 'no_match':
+                // Instead of a match, maybe show a generic no match message
+                roomStore.setMatchFound({
+                    tmdb_id: null,
+                    title: "Eşleşme Bulunamadı",
+                    overview: data.detail || "Kimse aynı yapıma oy vermedi."
+                })
                 roomStore.setVotingActive(false)
                 break
             default:
@@ -83,10 +95,28 @@ export const useRoomWs = () => {
         }
     }
 
+    const forceStart = () => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({
+                type: 'force_start'
+            }))
+        }
+    }
+
+    const forceFinish = () => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({
+                type: 'force_finish'
+            }))
+        }
+    }
+
     return {
         connect,
         disconnect,
         submitMood,
-        sendSwipe
+        sendSwipe,
+        forceStart,
+        forceFinish
     }
 }

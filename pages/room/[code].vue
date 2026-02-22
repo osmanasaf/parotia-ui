@@ -17,7 +17,7 @@
     </div>
 
     <div v-else-if="roomStore.votingActive" class="animate-fade-in">
-      <RoomVoting />
+      <RoomVoting :is-creator="isCreator" :code="roomCode" />
     </div>
 
       <div v-else class="animate-fade-in">
@@ -28,6 +28,7 @@
         />
       </div>
     </main>
+    <AppFooter />
   </div>
 </template>
 
@@ -36,12 +37,14 @@ import CinemaSpinner from '~/components/ui/CinemaSpinner.vue'
 import RoomWaiting from '~/components/room/RoomWaiting.vue'
 import RoomVoting from '~/components/room/RoomVoting.vue'
 import RoomMatchFound from '~/components/room/RoomMatchFound.vue'
+import AppFooter from '~/components/layout/AppFooter.vue'
 
 const route = useRoute()
 const roomCode = route.params.code
 const roomStore = useRoomStore()
 const authStore = useAuthStore()
 const { connect, disconnect } = useRoomWs()
+const { getAuthHeaders } = useTokenManager()
 
 const loading = ref(true)
 
@@ -53,9 +56,7 @@ onMounted(async () => {
   try {
     // Fetch room details first
     const res = await $fetch(`${useRuntimeConfig().public.apiBaseUrl}/rooms/${roomCode}`, {
-      headers: {
-        ...(authStore.token ? { 'Authorization': `Bearer ${authStore.token}` } : {})
-      }
+      headers: getAuthHeaders()
     })
     
     if (res) {

@@ -7,6 +7,14 @@
         <span class="text-xs font-bold uppercase tracking-widest text-white/50">CANLI OYLAMA</span>
       </div>
       <div class="flex items-center gap-4">
+        <button 
+          v-if="isCreator"
+          @click="forceEndVoting"
+          :disabled="ending"
+          class="px-4 py-2 bg-rose-500/10 text-rose-400 text-xs font-bold uppercase tracking-widest rounded-xl border border-rose-500/20 hover:bg-rose-500/20 transition-all active:scale-95 disabled:opacity-50"
+        >
+          {{ ending ? 'Bitiriliyor...' : 'Oylamayı Bitir' }}
+        </button>
         <div class="bg-white/5 px-4 py-2 rounded-xl backdrop-blur-md border border-white/10">
           <span class="text-amber-500 font-mono font-bold">{{ timeLeft }}</span>
         </div>
@@ -106,8 +114,16 @@
 </template>
 
 <script setup>
+const props = defineProps({
+  isCreator: Boolean,
+  code: String
+})
+
 const roomStore = useRoomStore()
-const { sendSwipe } = useRoomWs()
+const { sendSwipe, forceFinish } = useRoomWs()
+const { getAuthHeaders } = useTokenManager()
+
+const ending = ref(false)
 
 const recommendations = computed(() => roomStore.recommendations)
 const currentIndex = ref(0)
@@ -250,6 +266,12 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(timerInt)
 })
+
+const forceEndVoting = () => {
+  ending.value = true
+  forceFinish()
+  // Disable button while waiting for match_found/no_match event
+}
 </script>
 
 <style scoped>

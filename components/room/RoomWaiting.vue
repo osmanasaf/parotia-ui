@@ -43,13 +43,18 @@
         <!-- Room Link Copy -->
         <div class="bg-white/5 p-4 rounded-2xl border border-white/10 flex items-center justify-between">
           <div class="text-sm font-medium text-white/50">Arkadaşlarını davet et:</div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 relative">
             <code class="px-2 py-1 bg-black rounded text-amber-500 font-bold tracking-widest">{{ code }}</code>
             <button @click="copyLink" class="p-2 hover:bg-white/10 rounded-lg transition-colors text-white/70 hover:text-white">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
               </svg>
             </button>
+            <transition name="tooltip-fade">
+              <span v-if="copied" class="absolute -top-10 right-0 bg-emerald-500 text-black text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg">
+                Link kopyalandı!
+              </span>
+            </transition>
           </div>
         </div>
       </div>
@@ -91,12 +96,12 @@
           </div>
         </div>
 
-        <div v-if="isCreator && allReady" class="pt-6">
+        <div v-if="isCreator && canStart" class="pt-6">
           <button 
             @click="handleStartVoting"
             class="w-full py-4 bg-white text-black font-bold rounded-2xl hover:bg-white/90 shadow-xl transition-all active:scale-95"
           >
-            Oylamayı Başlat
+            {{ allReady ? 'Oylamayı Başlat' : 'Erken Başlat' }}
           </button>
         </div>
       </div>
@@ -112,11 +117,17 @@ const props = defineProps({
 })
 
 const roomStore = useRoomStore()
-const { submitMood } = useRoomWs()
+const { submitMood, forceStart } = useRoomWs()
+const { getAuthHeaders } = useTokenManager()
 const moodText = ref('')
+const copied = ref(false)
 
 const allReady = computed(() => {
   return props.participants.length >= 2 && props.participants.every(p => p.submitted_mood)
+})
+
+const canStart = computed(() => {
+  return roomStore.myStatus.submittedMood && props.participants.length >= 1
 })
 
 const handleSubmitMood = () => {
@@ -125,24 +136,26 @@ const handleSubmitMood = () => {
   }
 }
 
-const handleStartVoting = async () => {
-  // Logic to start voting manually or it could be automatic from backend
-  // But here we trigger via API if requested
-  try {
-    await $fetch(`${useRuntimeConfig().public.apiBaseUrl}/rooms/${props.code}/start`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${useAuthStore().token}`
-      }
-    })
-  } catch (error) {
-    console.error('Failed to start voting:', error)
-  }
+const handleStartVoting = () => {
+  forceStart()
 }
 
 const copyLink = () => {
-  const url = `${window.location.origin}/room?code=${props.code}`
+  const url = `${window.location.origin}/room/${props.code}`
   navigator.clipboard.writeText(url)
-  // Toast or something feedback
+  copied.value = true
+  setTimeout(() => { copied.value = false }, 2000)
 }
 </script>
+
+<style scoped>
+.tooltip-fade-enter-active,
+.tooltip-fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.tooltip-fade-enter-from,
+.tooltip-fade-leave-to {
+  opacity: 0;
+  transform: translateY(4px);
+}
+</style>
