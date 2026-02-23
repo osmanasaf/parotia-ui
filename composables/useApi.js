@@ -1,10 +1,37 @@
 export const useApi = () => {
   const config = useRuntimeConfig()
-  const { getToken, isTokenValid } = useTokenManager()
+  const {
+    getToken,
+    isTokenValid,
+    setToken,
+    setRefreshToken,
+    getRefreshToken,
+    removeToken,
+    removeRefreshToken
+  } = useTokenManager()
+
+  // Refresh token state
+  const isRefreshing = useState('is_refreshing', () => false)
+  const failedQueue = useState('failed_queue', () => [])
+
+  const processQueue = (error, token = null) => {
+    failedQueue.value.forEach((prom) => {
+      if (error) {
+        prom.reject(error)
+      } else {
+        prom.resolve(token)
+      }
+    })
+    failedQueue.value = []
+  }
 
   const API_BASE_URL = config.public.apiBaseUrl || 'http://localhost:8000'
+
   const apiCall = async (endpoint, options = {}) => {
-    const token = getToken?.() || null
+    let token = getToken?.() || null
+
+    // If token is invalid/expired but we have a refresh token, we might want to refresh?
+    // Actually, we'll wait for the 401 from backend to be sure.
 
     try {
       const response = await $fetch(`${API_BASE_URL}${endpoint}`, {
@@ -17,14 +44,64 @@ export const useApi = () => {
       })
       return response
     } catch (error) {
-      console.error(`API Error for ${endpoint}:`, error)
-      if (error.statusCode === 401 && typeof window !== 'undefined') {
+      const originalRequest = { endpoint, options }
+
+      if (error.statusCode === 401 && !options._retry) {
+        if (isRefreshing.value) {
+          return new Promise((resolve, reject) => {
+            failedQueue.value.push({ resolve, reject })
+          })
+            .then((newToken) => {
+              return apiCall(endpoint, {
+                ...options,
+                headers: {
+                  ...options.headers,
+                  'Authorization': `Bearer ${newToken}`
+                }
+              })
+            })
+            .catch((err) => Promise.reject(err))
+        }
+
+        options._retry = true
+        isRefreshing.value = true
+
+        const refreshToken = getRefreshToken()
+        if (!refreshToken) {
+          isRefreshing.value = false
+          // Redirect or handle logout
+          return Promise.reject(error)
+        }
+
         try {
-          localStorage.removeItem('access_token')
-        } catch {
-          /* noop */
+          const res = await $fetch(`${API_BASE_URL}/auth/refresh?refresh_token=${refreshToken}`, {
+            method: 'POST'
+          })
+
+          const { access_token, refresh_token } = res
+
+          setToken(access_token)
+          if (refresh_token) setRefreshToken(refresh_token)
+
+          processQueue(null, access_token)
+          isRefreshing.value = false
+
+          return apiCall(endpoint, options)
+        } catch (refreshError) {
+          processQueue(refreshError, null)
+          isRefreshing.value = false
+
+          removeToken()
+          removeRefreshToken()
+
+          if (process.client) {
+            window.location.href = '/'
+          }
+          return Promise.reject(refreshError)
         }
       }
+
+      console.error(`API Error for ${endpoint}:`, error)
       throw error
     }
   }
@@ -194,8 +271,11 @@ export const useApi = () => {
         body: { email, password }
       })
 
-      if (response.access_token && process.client) {
-        localStorage.setItem('movai_token', response.access_token)
+      if (response.access_token) {
+        setToken(response.access_token)
+        if (response.refresh_token) {
+          setRefreshToken(response.refresh_token)
+        }
       }
 
       return response
@@ -221,8 +301,9 @@ export const useApi = () => {
     try {
       return await apiCall('/auth/me')
     } catch (error) {
-      if (process.client) {
-        localStorage.removeItem('movai_token')
+      if (error.statusCode === 401) {
+        removeToken()
+        removeRefreshToken()
       }
       throw error
     }
@@ -607,12 +688,26 @@ export const useAuth = () => {
     }
   }
 
-  const logout = () => {
-    if (process.client) {
-      localStorage.removeItem('movai_token')
+  const logout = async () => {
+    const { removeToken, removeRefreshToken, getRefreshToken } = useTokenManager()
+    const refreshToken = getRefreshToken()
+
+    try {
+      if (refreshToken) {
+        const config = useRuntimeConfig()
+        const API_BASE_URL = config.public.apiBaseUrl || 'http://localhost:8000'
+        await $fetch(`${API_BASE_URL}/auth/logout?refresh_token=${refreshToken}`, {
+          method: 'POST'
+        })
+      }
+    } catch (error) {
+      console.error('Logout API failed:', error)
+    } finally {
+      removeToken()
+      removeRefreshToken()
+      user.value = null
+      navigateTo('/')
     }
-    user.value = null
-    navigateTo('/')
   }
 
   const register = async (email, username, password) => {

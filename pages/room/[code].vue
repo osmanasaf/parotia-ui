@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-[var(--bg-base)] text-white relative overflow-hidden">
+  <div class="min-h-screen bg-[var(--bg-base)] text-white relative">
     <!-- Grain Overlay -->
-    <div class="home-hero-grain" />
+    <div class="home-hero-grain pointer-events-none" />
     <div class="relative z-50">
       <AppHeader />
     </div>
@@ -30,7 +30,6 @@
         />
       </div>
     </main>
-    <AppFooter />
   </div>
 </template>
 
@@ -39,7 +38,7 @@ import CinemaSpinner from '~/components/ui/CinemaSpinner.vue'
 import RoomWaiting from '~/components/room/RoomWaiting.vue'
 import RoomVoting from '~/components/room/RoomVoting.vue'
 import RoomMatchFound from '~/components/room/RoomMatchFound.vue'
-import AppFooter from '~/components/layout/AppFooter.vue'
+import AppHeader from '~/components/layout/AppHeader.vue'
 
 const route = useRoute()
 const roomCode = route.params.code

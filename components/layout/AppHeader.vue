@@ -25,6 +25,14 @@
             >
               Diziler
             </NuxtLink>
+            <NuxtLink
+              to="/room"
+              class="font-medium transition-colors duration-200 flex items-center gap-2"
+              :class="isRoomActive ? 'text-[#F5A623]' : 'text-white/70 hover:text-[#F5A623]'"
+            >
+              Sinema Odası
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-500 border border-amber-500/30">BETA</span>
+            </NuxtLink>
             <ExpandingSearch />
             <LoginButton />
           </div>
@@ -43,4 +51,5 @@ import Logo from '~/components/ui/Logo.vue'
 const route = useRoute()
 const isMoviesActive = computed(() => route.path.startsWith('/movie'))
 const isTVActive = computed(() => route.path.startsWith('/tv'))
+const isRoomActive = computed(() => route.path.startsWith('/room'))
 </script> 

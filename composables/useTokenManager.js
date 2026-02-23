@@ -20,14 +20,33 @@ export const useTokenManager = () => {
     }
   }
 
+  const setRefreshToken = (token) => {
+    if (process.client) {
+      localStorage.setItem(AUTH_CONSTANTS.REFRESH_TOKEN_KEY, token)
+    }
+  }
+
+  const getRefreshToken = () => {
+    if (process.client) {
+      return localStorage.getItem(AUTH_CONSTANTS.REFRESH_TOKEN_KEY)
+    }
+    return null
+  }
+
+  const removeRefreshToken = () => {
+    if (process.client) {
+      localStorage.removeItem(AUTH_CONSTANTS.REFRESH_TOKEN_KEY)
+    }
+  }
+
   const isTokenValid = (token) => {
     if (!token) return false
-    
+
     try {
       // JWT token'ın payload kısmını decode et
       const payload = JSON.parse(atob(token.split('.')[1]))
       const now = Date.now() / 1000
-      
+
       return payload.exp > now
     } catch (error) {
       return false
@@ -36,7 +55,7 @@ export const useTokenManager = () => {
 
   const getAuthHeaders = () => {
     const token = getToken()
-    
+
     if (!token || !isTokenValid(token)) {
       return {}
     }
@@ -51,12 +70,12 @@ export const useTokenManager = () => {
 
   const shouldRefreshToken = (token) => {
     if (!token) return false
-    
+
     try {
       const payload = JSON.parse(atob(token.split('.')[1]))
       const now = Date.now() / 1000
       const timeUntilExpiry = payload.exp - now
-      
+
       // Token 5 dakika içinde expire olacaksa yenile
       return timeUntilExpiry < 300
     } catch (error) {
@@ -68,6 +87,9 @@ export const useTokenManager = () => {
     setToken,
     getToken,
     removeToken,
+    setRefreshToken,
+    getRefreshToken,
+    removeRefreshToken,
     isTokenValid,
     getAuthHeaders,
     shouldRefreshToken
