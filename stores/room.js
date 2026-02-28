@@ -9,6 +9,7 @@ export const useRoomStore = defineStore('room', {
         votingActive: false,
         interimMatches: [],
         votingResults: null,
+        allCardsSwiped: false,
         myStatus: {
             ready: false,
             submittedMood: false
@@ -40,6 +41,9 @@ export const useRoomStore = defineStore('room', {
         setInterimMatches(match) {
             this.interimMatches.push(match)
         },
+        setAllCardsSwiped(val) {
+            this.allCardsSwiped = val
+        },
         setVotingResults(results) {
             this.votingResults = results
         },
@@ -54,6 +58,7 @@ export const useRoomStore = defineStore('room', {
             this.votingActive = false
             this.interimMatches = []
             this.votingResults = null
+            this.allCardsSwiped = false
             this.myStatus = {
                 ready: false,
                 submittedMood: false

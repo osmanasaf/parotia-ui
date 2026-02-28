@@ -123,6 +123,11 @@ export const useRoomWs = () => {
                 roomStore.setVotingResults([])
                 roomStore.setVotingActive(false)
                 break
+            case 'all_cards_swiped':
+                // Tüm katılımcılar kartları bitirdi ama oylama devam ediyor
+                // Creator force_finish ile bitirecek
+                roomStore.setAllCardsSwiped(true)
+                break
             default:
                 console.log('Unknown WS event:', data.type)
         }
