@@ -135,9 +135,10 @@ const ending = ref(false)
 
 const recommendations = computed(() => roomStore.recommendations)
 const currentIndex = ref(0)
-// Doğal sırayla tut: index 0 = altta, son index = üstte (ters çevirmeden hesap)
+// reverse() kritik: üstteki kart daima recommendations[currentIndex] olur
+// getCardStyle total parametresiyle dinamik isTop hesaplar (son kart düzeltmesi)
 const visibleCards = computed(() => {
-  return recommendations.value.slice(currentIndex.value, currentIndex.value + 3)
+  return recommendations.value.slice(currentIndex.value, currentIndex.value + 3).reverse()
 })
 
 const latestInterimMatch = computed(() => {
@@ -232,10 +233,12 @@ const recordSwipe = (id, action) => {
 }
 
 const swipeLeftManual = () => {
+  isDragging.value = true
   offsetX.value = -200
   finishSwipe()
 }
 const swipeRightManual = () => {
+  isDragging.value = true
   offsetX.value = 200
   finishSwipe()
 }
@@ -247,7 +250,7 @@ const swipeUpManual = () => {
 }
 
 const getCardStyle = (index, total) => {
-  // Dizideki son eleman üsttedir (sürüklenen kart)
+  // reverse() sonrası: son index (total-1) = üstteki/sürüklenen kart
   const isTop = index === total - 1
   if (isTop && isDragging.value) {
     return {
@@ -257,7 +260,7 @@ const getCardStyle = (index, total) => {
     }
   }
 
-  // Üstten mesafe: 0 = üst kart, 1 = bir alttaki, 2 = en alttaki
+  // Üstten derinlik: 0 = üst kart, arttıkça daha altta
   const depthFromTop = (total - 1) - index
   return {
     transform: `scale(${1 - depthFromTop * 0.05}) translateY(${depthFromTop * 15}px)`,
