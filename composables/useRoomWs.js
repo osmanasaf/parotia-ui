@@ -1,4 +1,6 @@
 let socket = null
+let currentRoomCode = null
+let intentionalClose = false
 
 export const useRoomWs = () => {
     const roomStore = useRoomStore()
@@ -17,9 +19,7 @@ export const useRoomWs = () => {
         }
     }
 
-    const connect = (roomCode) => {
-        if (socket) return
-
+    const connectSocket = (roomCode) => {
         const WS_BASE_URL = config.public.apiBaseUrl.replace('http', 'ws')
         const sessionId = getSessionId()
         const url = `${WS_BASE_URL}/rooms/${roomCode}/ws?session_id=${sessionId}`
@@ -42,10 +42,29 @@ export const useRoomWs = () => {
         socket.onclose = () => {
             console.log('Movie Room WS Closed')
             socket = null
+
+            // Backend match_found sonrası WS'i kapatırsa ve oylama hâlâ aktifse yeniden bağlan
+            if (!intentionalClose && roomStore.votingActive && roomStore.votingResults === null) {
+                console.log('WS closed during active voting, reconnecting in 2s...')
+                setTimeout(() => {
+                    if (currentRoomCode && roomStore.votingActive && roomStore.votingResults === null) {
+                        connectSocket(currentRoomCode)
+                    }
+                }, 2000)
+            }
         }
     }
 
+    const connect = (roomCode) => {
+        if (socket) return
+        intentionalClose = false
+        currentRoomCode = roomCode
+        connectSocket(roomCode)
+    }
+
     const disconnect = () => {
+        intentionalClose = true
+        currentRoomCode = null
         if (socket) {
             socket.close()
             socket = null
@@ -75,30 +94,31 @@ export const useRoomWs = () => {
                 roomStore.setExpiresAt(data.expires_at)
                 roomStore.setVotingActive(true)
                 break
-            case 'match_found':
-                // Interim match mid-voting. Don't stop voting.
+            case 'match_found': {
+                // Interim match — oylama durmuyor, sadece banner gösteriliyor
                 const matchedTmdbId = data.tmdb_id
                 const movie = roomStore.recommendations.find(m => m.tmdb_id === matchedTmdbId)
                 if (movie) {
-                    // Check if already in interim list
                     if (!roomStore.interimMatches.some(m => m.tmdb_id === movie.tmdb_id)) {
                         roomStore.setInterimMatches(movie)
                     }
                 }
                 break
-            case 'voting_finished':
-                // The final ranked list of matches
+            }
+            case 'voting_finished': {
+                // Nihai sıralı eşleşme listesi
                 if (data.matches && data.matches.length > 0) {
                     const enrichedMatches = data.matches.map(m => {
                         const rec = roomStore.recommendations.find(r => r.tmdb_id === m.tmdb_id)
-                        return rec || m // fallback to basic ID if not found (shouldn't happen)
+                        return rec || m
                     })
                     roomStore.setVotingResults(enrichedMatches)
                 } else {
-                    roomStore.setVotingResults([]) // Fallback in case matches array is empty
+                    roomStore.setVotingResults([])
                 }
                 roomStore.setVotingActive(false)
                 break
+            }
             case 'no_match':
                 roomStore.setVotingResults([])
                 roomStore.setVotingActive(false)

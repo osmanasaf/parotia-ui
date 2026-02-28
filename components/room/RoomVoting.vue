@@ -235,11 +235,13 @@ const recordSwipe = (id, action) => {
 const swipeLeftManual = () => {
   isDragging.value = true
   offsetX.value = -200
+  offsetY.value = 0
   finishSwipe()
 }
 const swipeRightManual = () => {
   isDragging.value = true
   offsetX.value = 200
+  offsetY.value = 0
   finishSwipe()
 }
 const swipeUpManual = () => {
