@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-50 flex flex-col items-center justify-start p-6 bg-transparent min-h-[80vh] overflow-x-hidden pt-12">
+  <div class="relative z-50 flex flex-col items-center justify-start p-4 md:p-6 bg-transparent min-h-[80vh] overflow-x-hidden pt-6 md:pt-12">
     <!-- Confetti / Particles Background for top match -->
     <div v-if="hasMatches" class="absolute inset-0 pointer-events-none opacity-50 z-0">
       <div v-for="n in 30" :key="n" class="confetti" :style="getConfettiStyle(n)"></div>
@@ -10,7 +10,7 @@
         <div v-if="hasMatches" class="inline-block px-4 py-1 bg-amber-500 text-black text-xs font-black rounded-full uppercase tracking-[0.3em] mb-6 shadow-[0_0_20px_rgba(245,158,11,0.5)]">SONUÇLAR BELLİ OLDU</div>
         <div v-else class="inline-block px-4 py-1 bg-white/20 text-white text-xs font-black rounded-full uppercase tracking-[0.3em] mb-6">OYLAMA BİTTİ</div>
         
-        <h2 class="text-4xl md:text-6xl font-bold mb-4 tracking-tighter">
+        <h2 class="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 tracking-tighter">
           {{ hasMatches ? 'İşte Ortak Kararlarınız' : 'Ortak Bir Karara Varamadınız' }}
         </h2>
         <p v-if="!hasMatches" class="text-white/60 text-lg">Hiçbir yapımda ortak bir beğeni oluşmadı.</p>

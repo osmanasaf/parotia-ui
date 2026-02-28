@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto px-4 py-12 relative">
+  <div class="max-w-4xl mx-auto px-4 py-8 md:py-12 relative">
     <div class="flex flex-col md:flex-row gap-12 items-start">
       <!-- Left: Room Info & Mood Input -->
       <div class="flex-1 space-y-8 w-full">
@@ -8,7 +8,7 @@
             <span class="px-3 py-1 bg-amber-500/10 text-amber-500 text-xs font-bold rounded-full uppercase tracking-widest border border-amber-500/20">BEKLEME ODASI</span>
             <span class="text-white/40 text-sm font-mono">{{ code }}</span>
           </div>
-          <h2 class="text-4xl font-bold mb-4">Ortak Bir Karar Verin</h2>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Ortak Bir Karar Verin</h2>
           <p class="text-white/60 leading-relaxed">
             Herkes katıldıktan ve ne izlemek istediğini belirttikten sonra yapay zeka ortak zevkinize göre öneriler getirecek.
           </p>

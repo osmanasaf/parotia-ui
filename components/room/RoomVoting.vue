@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-[70vh] w-full flex flex-col items-center justify-center py-12 px-4 overflow-hidden relative">
+  <div class="min-h-screen w-full flex flex-col items-center justify-center py-8 md:py-12 px-4 relative">
     <!-- Background Header Stats -->
-    <div class="absolute top-8 left-0 right-0 px-6 flex items-center justify-between z-10 transition-all">
+    <div class="absolute top-4 md:top-8 left-0 right-0 px-4 md:px-6 flex items-center justify-between z-10 transition-all">
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-3">
           <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
@@ -30,12 +30,12 @@
     </div>
 
     <!-- Card Stack -->
-    <div class="relative w-full max-w-[380px] aspect-[2/3] perspective-1000">
+    <div class="relative w-full max-w-[300px] sm:max-w-[340px] md:max-w-[380px] aspect-[2/3] perspective-1000">
       <div 
         v-for="(movie, index) in visibleCards" 
         :key="movie.tmdb_id"
         class="absolute inset-0 transition-transform duration-300 card-container"
-        :style="getCardStyle(index)"
+        :style="getCardStyle(index, visibleCards.length)"
         @touchstart="handleTouchStart"
         @touchmove="handleTouchMove"
         @touchend="handleTouchEnd"
@@ -135,8 +135,9 @@ const ending = ref(false)
 
 const recommendations = computed(() => roomStore.recommendations)
 const currentIndex = ref(0)
+// Doğal sırayla tut: index 0 = altta, son index = üstte (ters çevirmeden hesap)
 const visibleCards = computed(() => {
-  return recommendations.value.slice(currentIndex.value, currentIndex.value + 3).reverse()
+  return recommendations.value.slice(currentIndex.value, currentIndex.value + 3)
 })
 
 const latestInterimMatch = computed(() => {
@@ -245,8 +246,9 @@ const swipeUpManual = () => {
   finishSwipe()
 }
 
-const getCardStyle = (index) => {
-  const isTop = index === 2 // Because we reverse() in visibleCards
+const getCardStyle = (index, total) => {
+  // Dizideki son eleman üsttedir (sürüklenen kart)
+  const isTop = index === total - 1
   if (isTop && isDragging.value) {
     return {
       transform: `translate(${offsetX.value}px, ${offsetY.value}px) rotate(${offsetX.value / 20}deg)`,
@@ -254,12 +256,13 @@ const getCardStyle = (index) => {
       transition: 'none'
     }
   }
-  
-  const reverseIndex = 2 - index
+
+  // Üstten mesafe: 0 = üst kart, 1 = bir alttaki, 2 = en alttaki
+  const depthFromTop = (total - 1) - index
   return {
-    transform: `scale(${1 - reverseIndex * 0.05}) translateY(${reverseIndex * 15}px)`,
+    transform: `scale(${1 - depthFromTop * 0.05}) translateY(${depthFromTop * 15}px)`,
     zIndex: index,
-    opacity: 1 - reverseIndex * 0.3
+    opacity: 1 - depthFromTop * 0.3
   }
 }
 
