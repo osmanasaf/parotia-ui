@@ -282,8 +282,10 @@ const updateTimer = () => {
   const seconds = Math.floor((diff % 60000) / 1000)
   timeLeft.value = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
   
-  if (diff === 0) {
-    // Voting ended
+  if (diff === 0 && !ending.value) {
+    if (props.isCreator) {
+      forceEndVoting()
+    }
   }
 }
 
